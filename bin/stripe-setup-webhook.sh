@@ -14,20 +14,32 @@ WEBHOOK_URL="${1:-http://localhost:8000/stripe/webhook}"
 echo "🔗 Setting up Stripe webhook endpoint..."
 echo "📍 Endpoint URL: $WEBHOOK_URL"
 
-# Create webhook endpoint
-WEBHOOK=$(curl -s https://api.stripe.com/v1/webhook_endpoints \
-  -u "$STRIPE_SECRET_KEY:" \
-  -d "url=$WEBHOOK_URL" \
-  -d "enabled_events[]=customer.subscription.created" \
-  -d "enabled_events[]=customer.subscription.updated" \
-  -d "enabled_events[]=customer.subscription.deleted" \
-  -d "enabled_events[]=invoice.payment_succeeded" \
-  -d "enabled_events[]=invoice.payment_failed")
+# Check if webhook endpoint already exists
+echo "🔍 Checking for existing webhook endpoint..."
+EXISTING_WEBHOOKS=$(curl -s https://api.stripe.com/v1/webhook_endpoints \
+  -u "$STRIPE_SECRET_KEY:")
 
-WEBHOOK_ID=$(echo $WEBHOOK | grep -o '"id":"we_[^"]*' | cut -d'"' -f4)
-WEBHOOK_SECRET=$(echo $WEBHOOK | grep -o '"secret":"whsec_[^"]*' | cut -d'"' -f4)
+if echo "$EXISTING_WEBHOOKS" | grep -q "\"url\":\"$WEBHOOK_URL\""; then
+  echo "✅ Webhook endpoint already exists for this URL"
+  WEBHOOK_ID=$(echo $EXISTING_WEBHOOKS | grep -B5 -A5 "\"url\":\"$WEBHOOK_URL\"" | grep -o '"id":"we_[^"]*' | head -1 | cut -d'"' -f4)
+  WEBHOOK_SECRET=$(echo $EXISTING_WEBHOOKS | grep -B5 -A5 "\"url\":\"$WEBHOOK_URL\"" | grep -o '"secret":"whsec_[^"]*' | head -1 | cut -d'"' -f4)
+else
+  echo "🔗 Creating webhook endpoint..."
+  WEBHOOK=$(curl -s https://api.stripe.com/v1/webhook_endpoints \
+    -u "$STRIPE_SECRET_KEY:" \
+    -d "url=$WEBHOOK_URL" \
+    -d "enabled_events[]=customer.subscription.created" \
+    -d "enabled_events[]=customer.subscription.updated" \
+    -d "enabled_events[]=customer.subscription.deleted" \
+    -d "enabled_events[]=invoice.payment_succeeded" \
+    -d "enabled_events[]=invoice.payment_failed")
 
-echo "✅ Webhook endpoint created successfully!"
+  WEBHOOK_ID=$(echo $WEBHOOK | grep -o '"id":"we_[^"]*' | cut -d'"' -f4)
+  WEBHOOK_SECRET=$(echo $WEBHOOK | grep -o '"secret":"whsec_[^"]*' | cut -d'"' -f4)
+  echo "✅ Webhook endpoint created!"
+fi
+
+echo "✅ Webhook endpoint setup complete!"
 echo ""
 echo "📋 Webhook Details:"
 echo "Webhook ID: $WEBHOOK_ID"
