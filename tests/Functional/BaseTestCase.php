@@ -38,6 +38,7 @@ abstract class BaseTestCase extends WebTestCase
         $this->client->request('GET', $path);
         $this->assertResponseRedirects(null, 302, "Page {$path} should redirect");
         $location = $this->client->getResponse()->headers->get('Location');
+        $this->assertNotNull($location, "Location header should be present");
         $this->assertStringContainsString('/login', $location, "Page {$path} should redirect to login");
     }
 

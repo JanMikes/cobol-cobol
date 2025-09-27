@@ -18,12 +18,10 @@ if (isset($_ENV['BOOTSTRAP_LOAD_FIXTURES']) && $_ENV['BOOTSTRAP_LOAD_FIXTURES'])
     $kernel->boot();
     $container = $kernel->getContainer();
 
-    // Get doctrine and fixture loader
-    $entityManager = $container->get('doctrine.orm.entity_manager');
-    $fixtureLoader = new \Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader($container);
-
-    // Load fixtures
-    $fixtures = $fixtureLoader->getFixtures();
-    $executor = new \Doctrine\Common\DataFixtures\Executor\ORMExecutor($entityManager, new \Doctrine\Common\DataFixtures\Purger\ORMPurger());
-    $executor->execute($fixtures);
+    // Load fixtures using console command
+    passthru(sprintf(
+        'APP_ENV=%s php "%s/../bin/console" doctrine:fixtures:load --no-interaction',
+        $_ENV['APP_ENV'],
+        __DIR__
+    ));
 }

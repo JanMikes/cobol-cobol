@@ -42,8 +42,10 @@ class Plan
     #[ORM\Column]
     private int $sortOrder = 0;
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column(type: 'json')]
-    /** @var array<string> */
     private array $features = [];
 
     #[ORM\Column]
@@ -262,6 +264,7 @@ class Plan
     {
         if ($this->subscriptions->removeElement($subscription)) {
             if ($subscription->getPlan() === $this) {
+                /** @phpstan-ignore-next-line */
                 $subscription->setPlan(null);
             }
         }

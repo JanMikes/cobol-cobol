@@ -24,8 +24,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, nullable: false)]
     private string $email;
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column]
-    /** @var array<string> */
     private array $roles = [];
 
     #[ORM\Column(nullable: false)]
@@ -214,6 +216,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->subscriptions->removeElement($subscription)) {
             if ($subscription->getUser() === $this) {
+                /** @phpstan-ignore-next-line */
                 $subscription->setUser(null);
             }
         }

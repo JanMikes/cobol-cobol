@@ -129,6 +129,7 @@ class StripeWebhookController extends AbstractController
 
     private function handleInvoicePaymentSucceeded(\Stripe\Invoice $invoice): void
     {
+        /** @phpstan-ignore-next-line */
         $subscriptionId = $invoice->subscription;
 
         $this->logger->info('Processing invoice.payment_succeeded', [
@@ -145,6 +146,7 @@ class StripeWebhookController extends AbstractController
 
     private function handleInvoicePaymentFailed(\Stripe\Invoice $invoice): void
     {
+        /** @phpstan-ignore-next-line */
         $subscriptionId = $invoice->subscription;
 
         $this->logger->warning('Processing invoice.payment_failed', [

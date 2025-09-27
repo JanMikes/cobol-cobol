@@ -45,8 +45,10 @@ class Article
     #[ORM\JoinColumn(nullable: false)]
     private User $author;
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column(type: 'json')]
-    /** @var array<string> */
     private array $tags = [];
 
     #[ORM\Column(nullable: true)]

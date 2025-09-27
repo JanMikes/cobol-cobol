@@ -35,7 +35,7 @@ class StripeService
     {
         try {
             return $this->stripe->customers->create([
-                'email' => $user->getEmail() ?? '',
+                'email' => $user->getEmail(),
                 'name' => $user->getFullName(),
                 'metadata' => [
                     'user_id' => (string) $user->getId(),
