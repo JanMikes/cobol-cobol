@@ -26,25 +26,25 @@ class RegistrationFormType extends AbstractType
             ->add('firstName', TextType::class, [
                 'label' => 'First Name',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter your first name',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter your first name'
+                    ),
                 ],
             ])
             ->add('lastName', TextType::class, [
                 'label' => 'Last Name',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter your last name',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter your last name'
+                    ),
                 ],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter your email address',
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter your email address'
+                    ),
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -60,23 +60,23 @@ class RegistrationFormType extends AbstractType
                 ],
                 'invalid_message' => 'The password fields must match.',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        'max' => 4096,
-                    ]),
+                    new NotBlank(
+                        message: 'Please enter a password'
+                    ),
+                    new Length(
+                        min: 6,
+                        minMessage: 'Your password should be at least {{ limit }} characters',
+                        max: 4096
+                    ),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'I agree to the terms of service',
                 'mapped' => false,
                 'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
+                    new IsTrue(
+                        message: 'You should agree to our terms.'
+                    ),
                 ],
             ])
         ;
