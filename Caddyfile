@@ -1,0 +1,38 @@
+{
+    frankenphp
+    order php_server before file_server
+}
+
+:80 {
+    root * /app/public
+
+    # Security headers
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer-when-downgrade"
+        Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:"
+    }
+
+    # Handle Symfony routing
+    php_server
+
+    # Static files
+    file_server {
+        precompressed gzip br
+    }
+
+    # Logging
+    log {
+        output stdout
+        format console
+        level INFO
+    }
+
+    # Encode responses
+    encode gzip
+
+    # Handle PHP files and Symfony routing
+    try_files {path} {path}/ /index.php?{query}
+}

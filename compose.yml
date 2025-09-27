@@ -1,0 +1,55 @@
+services:
+  web:
+    image: ghcr.io/thedevs-cz/php:8.4
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/app
+      - ./docker-entrypoint.sh:/usr/local/bin/docker-php-entrypoint
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://cobolcobol:password@postgres:5432/cobolcobol?serverVersion=16&charset=utf8
+      - APP_ENV=dev
+      - APP_SECRET=change_me_in_production
+      - STRIPE_PUBLIC_KEY=pk_test_your_key_here
+      - STRIPE_SECRET_KEY=sk_test_your_key_here
+      - STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+      - MAILER_DSN=smtp://mailpit:1025
+      - SERVER_NAME=:80
+    networks:
+      - cobolcobol
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: cobolcobol_postgres
+    environment:
+      POSTGRES_DB: cobolcobol
+      POSTGRES_USER: cobolcobol
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - cobolcobol
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: cobolcobol_mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - cobolcobol
+
+networks:
+  cobolcobol:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
