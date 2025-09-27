@@ -2,9 +2,3 @@
 framework:
     csrf_protection:
         check_header: true
-
-# Configure Turbo to work properly with HTTPS
-# This ensures forms work correctly on production with SSL
-when@prod:
-    turbo:
-        enabled: true
