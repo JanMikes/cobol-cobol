@@ -16,6 +16,7 @@ jobs:
           image: postgres:17.0
           env:
               POSTGRES_PASSWORD: postgres
+              POSTGRES_DB: cobolcobol_test
           options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
           ports:
               - 5432:5432
@@ -34,6 +35,8 @@ jobs:
       -   run: bin/console importmap:install
 
       -   run: bin/console asset-map:compile
+
+      -   run: bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
       -   run: vendor/bin/phpunit
 
