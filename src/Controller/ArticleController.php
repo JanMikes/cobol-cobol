@@ -21,7 +21,7 @@ class ArticleController extends AbstractController
     public function index(): Response
     {
         $user = $this->getUser();
-        $hasActiveSubscription = $user ? $this->subscriptionService->userHasActiveSubscription($user) : false;
+        $hasActiveSubscription = $user instanceof \App\Entity\User ? $this->subscriptionService->userHasActiveSubscription($user) : false;
 
         if ($hasActiveSubscription) {
             $articles = $this->articleRepository->findPublishedArticles();

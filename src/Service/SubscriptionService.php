@@ -68,12 +68,12 @@ class SubscriptionService
 
         $subscription->setStatus($stripeSubscription->status);
         $subscription->setCurrentPeriodStart(
-            $stripeSubscription->current_period_start
+            isset($stripeSubscription->current_period_start)
                 ? new \DateTimeImmutable('@' . $stripeSubscription->current_period_start)
                 : null
         );
         $subscription->setCurrentPeriodEnd(
-            $stripeSubscription->current_period_end
+            isset($stripeSubscription->current_period_end)
                 ? new \DateTimeImmutable('@' . $stripeSubscription->current_period_end)
                 : null
         );
@@ -93,7 +93,7 @@ class SubscriptionService
                 : null
         );
         $subscription->setCancelAtPeriodEnd(
-            $stripeSubscription->cancel_at_period_end && $stripeSubscription->current_period_end
+            $stripeSubscription->cancel_at_period_end && isset($stripeSubscription->current_period_end)
                 ? new \DateTimeImmutable('@' . $stripeSubscription->current_period_end)
                 : null
         );
@@ -145,10 +145,10 @@ class SubscriptionService
             $plan,
             $stripeSubscription->id,
             $stripeSubscription->status,
-            $stripeSubscription->current_period_start
+            isset($stripeSubscription->current_period_start)
                 ? new \DateTimeImmutable('@' . $stripeSubscription->current_period_start)
                 : null,
-            $stripeSubscription->current_period_end
+            isset($stripeSubscription->current_period_end)
                 ? new \DateTimeImmutable('@' . $stripeSubscription->current_period_end)
                 : null,
             $stripeSubscription->trial_start
@@ -183,6 +183,9 @@ class SubscriptionService
         return $this->getUserActiveSubscription($user) !== null;
     }
 
+    /**
+     * @return array{active_count: int, recent_subscriptions: Subscription[]}
+     */
     public function getSubscriptionStats(): array
     {
         $activeCount = $this->subscriptionRepository->countActiveSubscriptions();

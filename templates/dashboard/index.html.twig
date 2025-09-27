@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - COBOLCOBOL{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1><i class="bi bi-speedometer2"></i> Dashboard</h1>
+            <p class="text-muted">Welcome back, {{ user.firstName }}!</p>
+
+            <!-- Account Overview -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-person-circle"></i> Account Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
+                            <p><strong>Email:</strong> {{ user.email }}</p>
+                            <p><strong>Member since:</strong> {{ user.createdAt|date('F j, Y') }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            {% if active_subscription %}
+                                <div class="subscription-status">
+                                    <span class="badge bg-success fs-6">
+                                        <i class="bi bi-check-circle"></i> Active Subscriber
+                                    </span>
+                                    <p class="mt-2 mb-0">
+                                        <strong>Plan:</strong> {{ active_subscription.planName }}<br>
+                                        <strong>Status:</strong> {{ active_subscription.status|title }}<br>
+                                        {% if active_subscription.currentPeriodEnd %}
+                                        <strong>Next billing:</strong> {{ active_subscription.currentPeriodEnd|date('F j, Y') }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            {% else %}
+                                <div class="subscription-status">
+                                    <span class="badge bg-secondary fs-6">
+                                        <i class="bi bi-x-circle"></i> No Active Subscription
+                                    </span>
+                                    <p class="mt-2 mb-0">Upgrade to premium to access exclusive content.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <a href="{{ path('app_articles') }}" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-journal-text"></i> Browse Articles
+                            </a>
+                        </div>
+                        {% if active_subscription %}
+                        <div class="col-md-6">
+                            <a href="{{ path('app_premium') }}" class="btn btn-outline-warning w-100">
+                                <i class="bi bi-star-fill"></i> Premium Content
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="col-md-6">
+                            <a href="{{ path('app_pricing') }}" class="btn btn-outline-success w-100">
+                                <i class="bi bi-credit-card"></i> View Pricing
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <i class="bi bi-person-plus text-success"></i>
+                            <span>Account created on {{ user.createdAt|date('F j, Y g:i A') }}</span>
+                        </div>
+                        {% if active_subscription %}
+                        <div class="timeline-item">
+                            <i class="bi bi-credit-card text-primary"></i>
+                            <span>Subscribed to {{ active_subscription.planName }} plan</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Subscription Management -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-credit-card"></i> Subscription</h5>
+                </div>
+                <div class="card-body">
+                    {% if active_subscription %}
+                        <div class="text-center mb-3">
+                            <div class="premium-badge d-inline-block">
+                                <i class="bi bi-star-fill"></i> {{ active_subscription.planName }}
+                            </div>
+                        </div>
+
+                        {% if user.stripeCustomerId %}
+                        <a href="{{ path('app_manage_subscription') }}" class="btn btn-primary w-100 mb-2">
+                            <i class="bi bi-gear"></i> Manage Subscription
+                        </a>
+                        {% endif %}
+
+                        <small class="text-muted d-block text-center">
+                            Manage billing, payment methods, and more
+                        </small>
+                    {% else %}
+                        <div class="text-center">
+                            <i class="bi bi-star text-muted" style="font-size: 3rem;"></i>
+                            <h6 class="mt-2">No Active Subscription</h6>
+                            <p class="text-muted small">Upgrade to access premium content and features</p>
+                            <a href="{{ path('app_pricing') }}" class="btn btn-success w-100">
+                                <i class="bi bi-arrow-up"></i> Upgrade Now
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Help & Support -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-question-circle"></i> Help & Support</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="#" class="text-decoration-none">
+                                <i class="bi bi-book"></i> Knowledge Base
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-decoration-none">
+                                <i class="bi bi-envelope"></i> Contact Support
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-decoration-none">
+                                <i class="bi bi-shield-check"></i> Privacy Policy
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-decoration-none">
+                                <i class="bi bi-file-text"></i> Terms of Service
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline-item {
+    padding: 10px 0;
+    border-left: 2px solid #e9ecef;
+    padding-left: 20px;
+    margin-left: 10px;
+    position: relative;
+}
+
+.timeline-item i {
+    position: absolute;
+    left: -11px;
+    background: white;
+    padding: 4px;
+    border-radius: 50%;
+}
+
+.subscription-status .badge {
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}

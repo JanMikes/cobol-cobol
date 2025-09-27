@@ -22,6 +22,7 @@ class DashboardController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $this->getUser();
+        assert($user instanceof \App\Entity\User);
         $activeSubscription = $this->subscriptionService->getUserActiveSubscription($user);
 
         return $this->render('dashboard/index.html.twig', [
@@ -36,6 +37,7 @@ class DashboardController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $user = $this->getUser();
+        assert($user instanceof \App\Entity\User);
 
         if (!$user->getStripeCustomerId()) {
             $this->addFlash('error', 'No subscription found to manage.');

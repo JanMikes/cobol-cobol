@@ -35,10 +35,10 @@ class StripeService
     {
         try {
             return $this->stripe->customers->create([
-                'email' => $user->getEmail(),
+                'email' => $user->getEmail() ?? '',
                 'name' => $user->getFullName(),
                 'metadata' => [
-                    'user_id' => $user->getId(),
+                    'user_id' => (string) $user->getId(),
                 ],
             ]);
         } catch (ApiErrorException $e) {
@@ -95,8 +95,8 @@ class StripeService
                 'allow_promotion_codes' => true,
                 'billing_address_collection' => 'auto',
                 'metadata' => [
-                    'user_id' => $user->getId(),
-                    'plan_id' => $plan->getId(),
+                    'user_id' => (string) $user->getId(),
+                    'plan_id' => (string) $plan->getId(),
                 ],
             ]);
         } catch (ApiErrorException $e) {

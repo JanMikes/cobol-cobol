@@ -1,0 +1,261 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.title }} - COBOLCOBOL{% endblock %}
+{% block meta_description %}{{ article.excerpt }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Article Header -->
+            <article class="mb-4">
+                <header class="mb-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ path('app_articles') }}">Articles</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ article.title }}</li>
+                            </ol>
+                        </nav>
+                        {% if article.premium %}
+                        <span class="premium-badge">
+                            <i class="bi bi-star-fill"></i> Premium
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <h1 class="display-5 fw-bold mb-3">{{ article.title }}</h1>
+
+                    <div class="article-meta text-muted mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% if article.author %}
+                                <p class="mb-1">
+                                    <i class="bi bi-person"></i> By {{ article.author.firstName }} {{ article.author.lastName }}
+                                </p>
+                                {% endif %}
+                                <p class="mb-1">
+                                    <i class="bi bi-calendar"></i> {{ article.publishedAt|date('F j, Y') }}
+                                </p>
+                                <p class="mb-1">
+                                    <i class="bi bi-clock"></i> {{ article.readingTime ?? '5' }} min read
+                                </p>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                {% if article.category %}
+                                <span class="badge bg-secondary">{{ article.category }}</span>
+                                {% endif %}
+                                {% if article.tags %}
+                                    {% for tag in article.tags %}
+                                    <span class="badge bg-light text-dark">{{ tag }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if article.featuredImage %}
+                    <div class="mb-4">
+                        <img src="{{ article.featuredImage }}" class="img-fluid rounded" alt="{{ article.title }}" style="width: 100%; height: 300px; object-fit: cover;">
+                    </div>
+                    {% endif %}
+
+                    {% if article.excerpt %}
+                    <div class="lead mb-4">
+                        {{ article.excerpt }}
+                    </div>
+                    {% endif %}
+                </header>
+
+                <!-- Article Content -->
+                <div class="article-content">
+                    {{ article.content|raw }}
+                </div>
+
+                <!-- Article Footer -->
+                <footer class="mt-5 pt-4 border-top">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Share this article</h6>
+                            <div class="btn-group" role="group">
+                                <a href="#" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-twitter"></i> Twitter
+                                </a>
+                                <a href="#" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-facebook"></i> Facebook
+                                </a>
+                                <a href="#" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-linkedin"></i> LinkedIn
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            {% if article.updatedAt and article.updatedAt != article.publishedAt %}
+                            <small class="text-muted">
+                                Last updated: {{ article.updatedAt|date('F j, Y') }}
+                            </small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </footer>
+            </article>
+
+            <!-- Related Articles -->
+            <section class="mt-5">
+                <h3>Related Articles</h3>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Sample Related Article 1</h6>
+                                <p class="card-text small">Brief description of the related article...</p>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Sample Related Article 2</h6>
+                                <p class="card-text small">Brief description of the related article...</p>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Table of Contents -->
+            <div class="card mb-4 sticky-top" style="top: 20px;">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-list-ul"></i> Table of Contents</h6>
+                </div>
+                <div class="card-body">
+                    <nav class="toc">
+                        <ul class="list-unstyled">
+                            <li><a href="#introduction" class="text-decoration-none">Introduction</a></li>
+                            <li><a href="#main-content" class="text-decoration-none">Main Content</a></li>
+                            <li><a href="#conclusion" class="text-decoration-none">Conclusion</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Author Info -->
+            {% if article.author %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-person-circle"></i> About the Author</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <i class="bi bi-person text-white"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">{{ article.author.firstName }} {{ article.author.lastName }}</h6>
+                            <small class="text-muted">Content Writer</small>
+                        </div>
+                    </div>
+                    <p class="small">Experienced writer passionate about technology and innovation.</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Newsletter Signup -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-envelope"></i> Stay Updated</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small">Get the latest articles delivered to your inbox.</p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control form-control-sm" placeholder="Your email address">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Popular Articles -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-fire"></i> Popular Articles</h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action p-2">
+                            <div class="fw-bold small">Getting Started with SaaS</div>
+                            <small class="text-muted">1,234 views</small>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action p-2">
+                            <div class="fw-bold small">Building Modern Web Apps</div>
+                            <small class="text-muted">987 views</small>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action p-2">
+                            <div class="fw-bold small">Payment Integration Guide</div>
+                            <small class="text-muted">756 views</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.article-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.article-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.article-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.article-content p {
+    margin-bottom: 1.5rem;
+}
+
+.article-content blockquote {
+    border-left: 4px solid #007bff;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.article-content code {
+    background-color: #f8f9fa;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.article-content pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    overflow-x: auto;
+}
+
+.toc a {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.toc a:hover {
+    color: #007bff;
+}
+</style>
+{% endblock %}

@@ -64,22 +64,27 @@ class StripeWebhookController extends AbstractController
     {
         switch ($event->type) {
             case 'customer.subscription.created':
+                assert($event->data->object instanceof \Stripe\Subscription);
                 $this->handleSubscriptionCreated($event->data->object);
                 break;
 
             case 'customer.subscription.updated':
+                assert($event->data->object instanceof \Stripe\Subscription);
                 $this->handleSubscriptionUpdated($event->data->object);
                 break;
 
             case 'customer.subscription.deleted':
+                assert($event->data->object instanceof \Stripe\Subscription);
                 $this->handleSubscriptionDeleted($event->data->object);
                 break;
 
             case 'invoice.payment_succeeded':
+                assert($event->data->object instanceof \Stripe\Invoice);
                 $this->handleInvoicePaymentSucceeded($event->data->object);
                 break;
 
             case 'invoice.payment_failed':
+                assert($event->data->object instanceof \Stripe\Invoice);
                 $this->handleInvoicePaymentFailed($event->data->object);
                 break;
 
@@ -130,7 +135,7 @@ class StripeWebhookController extends AbstractController
             'amount_paid' => $invoice->amount_paid,
         ]);
 
-        if ($invoice->subscription) {
+        if (isset($invoice->subscription) && $invoice->subscription) {
             $subscription = $this->stripeService->retrieveSubscription($invoice->subscription);
             $this->subscriptionService->updateSubscriptionFromStripe($subscription);
         }
@@ -144,7 +149,7 @@ class StripeWebhookController extends AbstractController
             'amount_due' => $invoice->amount_due,
         ]);
 
-        if ($invoice->subscription) {
+        if (isset($invoice->subscription) && $invoice->subscription) {
             $subscription = $this->stripeService->retrieveSubscription($invoice->subscription);
             $this->subscriptionService->updateSubscriptionFromStripe($subscription);
         }

@@ -39,11 +39,12 @@ class PricingController extends AbstractController
         }
 
         $user = $this->getUser();
+        assert($user instanceof \App\Entity\User);
         $isYearly = $request->query->getBoolean('yearly', false);
 
         try {
             $session = $this->stripeService->createCheckoutSession($user, $plan, $isYearly);
-            return $this->redirect($session->url);
+            return $this->redirect($session->url ?? '');
         } catch (\Exception $e) {
             $this->addFlash('error', 'Unable to create checkout session. Please try again.');
             return $this->redirectToRoute('app_pricing');
