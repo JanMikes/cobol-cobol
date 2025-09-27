@@ -1,4 +1,4 @@
 doctrine:
     dbal:
         # Configure your test database URL in .env.test
-        dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+        # dbname_suffix: '_test%env(default::TEST_TOKEN)%'
