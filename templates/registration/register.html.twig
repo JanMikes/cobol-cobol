@@ -1,72 +1,133 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register - COBOLCOBOL{% endblock %}
+{% block title %}Registrácia - Čo bol COBOL?{% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card mt-5">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <h2 class="fw-bold">Create Account</h2>
-                        <p class="text-muted">Join COBOLCOBOL today</p>
+<!-- Registration Page -->
+<div class="min-h-screen bg-gradient-to-br from-cobol-navy via-cobol-blue to-cobol-green flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="flex items-center justify-center mb-6">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+                    <i class="fas fa-user-plus text-cobol-navy text-2xl"></i>
+                </div>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-2">Vytvorte si účet</h2>
+            <p class="text-white/80">Pripojte sa k COBOL komunite ešte dnes</p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8">
+            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate', 'class': 'space-y-6'}}) }}
+                <!-- First Name -->
+                <div>
+                    {{ form_label(registrationForm.firstName, 'Krstné meno', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
+                        {{ form_widget(registrationForm.firstName, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': 'Vaše krstné meno'}}) }}
                     </div>
+                    <div class="mt-1">
+                        {{ form_errors(registrationForm.firstName) }}
+                    </div>
+                </div>
 
-                    {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.firstName, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(registrationForm.firstName) }}
-                        </div>
+                <!-- Last Name -->
+                <div>
+                    {{ form_label(registrationForm.lastName, 'Priezvisko', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
+                        {{ form_widget(registrationForm.lastName, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': 'Vaše priezvisko'}}) }}
+                    </div>
+                    <div class="mt-1">
+                        {{ form_errors(registrationForm.lastName) }}
+                    </div>
+                </div>
 
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.lastName, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(registrationForm.lastName) }}
-                        </div>
+                <!-- Email -->
+                <div>
+                    {{ form_label(registrationForm.email, 'Email adresa', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': 'vas@email.com'}}) }}
+                    </div>
+                    <div class="mt-1">
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+                </div>
 
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.email, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(registrationForm.email) }}
-                        </div>
+                <!-- Password -->
+                <div>
+                    {{ form_label(registrationForm.plainPassword.first, 'Heslo', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
+                        {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': '••••••••'}}) }}
+                    </div>
+                    <div class="mt-1">
+                        {{ form_errors(registrationForm.plainPassword.first) }}
+                    </div>
+                </div>
 
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.plainPassword.first, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(registrationForm.plainPassword.first) }}
-                        </div>
+                <!-- Confirm Password -->
+                <div>
+                    {{ form_label(registrationForm.plainPassword.second, 'Potvrdiť heslo', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
+                        {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': '••••••••'}}) }}
+                    </div>
+                    <div class="mt-1">
+                        {{ form_errors(registrationForm.plainPassword.second) }}
+                    </div>
+                </div>
 
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.plainPassword.second, null, {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(registrationForm.plainPassword.second) }}
-                        </div>
+                <!-- Terms Agreement -->
+                <div>
+                    <label class="flex items-start">
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'w-4 h-4 text-cobol-cyan border-gray-300 rounded focus:ring-cobol-cyan mt-1'}}) }}
+                        <span class="ml-3 text-sm text-gray-700">
+                            Súhlasím s <a href="#" class="text-cobol-cyan hover:text-cobol-blue">obchodnými podmienkami</a> a <a href="#" class="text-cobol-cyan hover:text-cobol-blue">ochranou súkromia</a>
+                        </span>
+                    </label>
+                    <div class="mt-1">
+                        {{ form_errors(registrationForm.agreeTerms) }}
+                    </div>
+                </div>
 
-                        <div class="mb-3 form-check">
-                            {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
-                            {{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label'}}) }}
-                            {{ form_errors(registrationForm.agreeTerms) }}
-                        </div>
+                <!-- Submit Button -->
+                <button type="submit" class="w-full bg-gradient-to-r from-cobol-green to-cobol-cyan text-white py-3 px-4 rounded-lg font-semibold text-lg hover:from-cobol-cyan hover:to-cobol-green transition-all duration-200 transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Vytvoriť účet
+                </button>
+            {{ form_end(registrationForm) }}
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-person-plus"></i> Create Account
-                            </button>
-                        </div>
-                    {{ form_end(registrationForm) }}
-
-                    <hr class="my-4">
-
-                    <div class="text-center">
-                        <p class="mb-0">Already have an account?</p>
-                        <a href="{{ path('app_login') }}" class="btn btn-outline-primary">
-                            <i class="bi bi-box-arrow-in-right"></i> Sign In
-                        </a>
+            <!-- Divider -->
+            <div class="my-8">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Alebo</span>
                     </div>
                 </div>
             </div>
+
+            <!-- Login Link -->
+            <div class="text-center">
+                <p class="text-gray-600 mb-4">Už máte účet?</p>
+                <a href="{{ path('app_login') }}" class="inline-flex items-center px-6 py-3 border-2 border-cobol-green text-cobol-green rounded-lg font-semibold hover:bg-cobol-green hover:text-white transition-all duration-200 transform hover:scale-105">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Prihlásiť sa
+                </a>
+            </div>
+        </div>
+
+        <!-- Additional Links -->
+        <div class="text-center">
+            <a href="{{ path('app_home') }}" class="inline-flex items-center text-white/80 hover:text-white transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Späť na úvod
+            </a>
         </div>
     </div>
 </div>

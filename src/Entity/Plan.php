@@ -15,23 +15,23 @@ class Plan
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $name;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column]
-    private ?int $priceMonthly = null;
+    #[ORM\Column(nullable: false)]
+    private int $priceMonthly;
 
     #[ORM\Column(nullable: true)]
     private ?int $priceYearly = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $stripeProductId = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $stripeProductId;
 
-    #[ORM\Column(length: 255)]
-    private ?string $stripePriceMonthlyId = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $stripePriceMonthlyId;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripePriceYearlyId = null;
@@ -43,6 +43,7 @@ class Plan
     private int $sortOrder = 0;
 
     #[ORM\Column(type: 'json')]
+    /** @var array<string> */
     private array $features = [];
 
     #[ORM\Column]
@@ -69,7 +70,7 @@ class Plan
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -95,7 +96,7 @@ class Plan
         return $this;
     }
 
-    public function getPriceMonthly(): ?int
+    public function getPriceMonthly(): int
     {
         return $this->priceMonthly;
     }
@@ -145,7 +146,7 @@ class Plan
         return (int) round((($monthlyYearlyPrice - $this->priceYearly) / $monthlyYearlyPrice) * 100);
     }
 
-    public function getStripeProductId(): ?string
+    public function getStripeProductId(): string
     {
         return $this->stripeProductId;
     }
@@ -158,7 +159,7 @@ class Plan
         return $this;
     }
 
-    public function getStripePriceMonthlyId(): ?string
+    public function getStripePriceMonthlyId(): string
     {
         return $this->stripePriceMonthlyId;
     }
@@ -210,11 +211,17 @@ class Plan
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getFeatures(): array
     {
         return $this->features;
     }
 
+    /**
+     * @param array<string> $features
+     */
     public function setFeatures(array $features): static
     {
         $this->features = $features;

@@ -29,17 +29,17 @@ class Subscription
 
     #[ORM\ManyToOne(inversedBy: 'subscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private User $user;
 
     #[ORM\ManyToOne(inversedBy: 'subscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Plan $plan = null;
+    private Plan $plan;
 
-    #[ORM\Column(length: 255)]
-    private ?string $stripeSubscriptionId = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $stripeSubscriptionId;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $status;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $currentPeriodStart = null;
@@ -59,11 +59,11 @@ class Subscription
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $cancelAtPeriodEnd = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(nullable: false)]
+    private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    #[ORM\Column(nullable: false)]
+    private \DateTimeImmutable $updatedAt;
 
     public function __construct()
     {
@@ -76,12 +76,12 @@ class Subscription
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(User $user): static
     {
         $this->user = $user;
         $this->updatedAt = new \DateTimeImmutable();
@@ -89,12 +89,12 @@ class Subscription
         return $this;
     }
 
-    public function getPlan(): ?Plan
+    public function getPlan(): Plan
     {
         return $this->plan;
     }
 
-    public function setPlan(?Plan $plan): static
+    public function setPlan(Plan $plan): static
     {
         $this->plan = $plan;
         $this->updatedAt = new \DateTimeImmutable();
@@ -102,7 +102,7 @@ class Subscription
         return $this;
     }
 
-    public function getStripeSubscriptionId(): ?string
+    public function getStripeSubscriptionId(): string
     {
         return $this->stripeSubscriptionId;
     }
@@ -115,7 +115,7 @@ class Subscription
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -226,12 +226,12 @@ class Subscription
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -260,6 +260,6 @@ class Subscription
         $now = new \DateTimeImmutable();
         $interval = $now->diff($this->currentPeriodEnd);
 
-        return $interval->invert === 0 ? $interval->days : 0;
+        return $interval->invert === 0 ? (int) $interval->days : 0;
     }
 }

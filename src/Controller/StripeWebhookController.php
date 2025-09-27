@@ -129,28 +129,32 @@ class StripeWebhookController extends AbstractController
 
     private function handleInvoicePaymentSucceeded(\Stripe\Invoice $invoice): void
     {
+        $subscriptionId = $invoice->subscription;
+
         $this->logger->info('Processing invoice.payment_succeeded', [
             'invoice_id' => $invoice->id,
-            'subscription_id' => $invoice->subscription,
+            'subscription_id' => $subscriptionId,
             'amount_paid' => $invoice->amount_paid,
         ]);
 
-        if (isset($invoice->subscription) && $invoice->subscription) {
-            $subscription = $this->stripeService->retrieveSubscription($invoice->subscription);
+        if ($subscriptionId && is_string($subscriptionId)) {
+            $subscription = $this->stripeService->retrieveSubscription($subscriptionId);
             $this->subscriptionService->updateSubscriptionFromStripe($subscription);
         }
     }
 
     private function handleInvoicePaymentFailed(\Stripe\Invoice $invoice): void
     {
+        $subscriptionId = $invoice->subscription;
+
         $this->logger->warning('Processing invoice.payment_failed', [
             'invoice_id' => $invoice->id,
-            'subscription_id' => $invoice->subscription,
+            'subscription_id' => $subscriptionId,
             'amount_due' => $invoice->amount_due,
         ]);
 
-        if (isset($invoice->subscription) && $invoice->subscription) {
-            $subscription = $this->stripeService->retrieveSubscription($invoice->subscription);
+        if ($subscriptionId && is_string($subscriptionId)) {
+            $subscription = $this->stripeService->retrieveSubscription($subscriptionId);
             $this->subscriptionService->updateSubscriptionFromStripe($subscription);
         }
     }

@@ -14,17 +14,17 @@ class Article
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $title;
 
-    #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $slug;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $excerpt = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $content = null;
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    private string $content;
 
     #[ORM\Column]
     private bool $isPremium = false;
@@ -43,9 +43,10 @@ class Article
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $author = null;
+    private User $author;
 
     #[ORM\Column(type: 'json')]
+    /** @var array<string> */
     private array $tags = [];
 
     #[ORM\Column(nullable: true)]
@@ -65,7 +66,7 @@ class Article
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -78,7 +79,7 @@ class Article
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -104,7 +105,7 @@ class Article
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -170,12 +171,12 @@ class Article
         return $this->updatedAt;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): User
     {
         return $this->author;
     }
 
-    public function setAuthor(?User $author): static
+    public function setAuthor(User $author): static
     {
         $this->author = $author;
         $this->updatedAt = new \DateTimeImmutable();
@@ -183,11 +184,17 @@ class Article
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getTags(): array
     {
         return $this->tags;
     }
 
+    /**
+     * @param array<string> $tags
+     */
     public function setTags(array $tags): static
     {
         $this->tags = $tags;

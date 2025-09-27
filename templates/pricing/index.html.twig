@@ -1,84 +1,130 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pricing - COBOLCOBOL{% endblock %}
+{% block title %}Cenník - Čo bol COBOL?{% endblock %}
 
 {% block body %}
-<div class="container">
-    <!-- Header -->
-    <div class="row text-center mt-5 mb-5">
-        <div class="col-lg-12">
-            <h1 class="display-4 fw-bold">Simple, Transparent Pricing</h1>
-            <p class="lead text-muted">Choose the plan that works best for you</p>
+<!-- Hero Section -->
+<section class="py-20 bg-gradient-to-br from-cobol-navy via-cobol-blue to-cobol-cyan">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
+            Simple, Transparent <span class="font-mono text-cobol-amber">Pricing</span>
+        </h1>
+        <p class="text-xl text-white/90 mb-12 max-w-3xl mx-auto">
+            Choose the perfect plan for your COBOL learning journey. No hidden fees, no surprises.
+            Unlock the power of modern COBOL development today.
+        </p>
+
+        <!-- Pricing Toggle (if you want to add monthly/yearly toggle later) -->
+        <div class="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full p-1 mb-12">
+            <span class="px-6 py-2 bg-white text-cobol-navy rounded-full font-semibold">Monthly</span>
+            <span class="px-6 py-2 text-white/80 rounded-full font-semibold">Yearly (Save 20%)</span>
         </div>
     </div>
+</section>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-10">
 
     <!-- Pricing Cards -->
-    <div class="row justify-content-center g-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
         {% for plan in plans %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card pricing-card h-100 {% if loop.index == 2 %}featured{% endif %}">
-                {% if loop.index == 2 %}
-                <div class="badge bg-primary position-absolute top-0 start-50 translate-middle px-3 py-2">
-                    Most Popular
+        <div class="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover-lift transition-all duration-300 {% if loop.index == 2 %}border-gradient transform scale-105 ring-4 ring-cobol-cyan/20{% endif %}">
+            {% if loop.index == 2 %}
+                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                    <span class="bg-gradient-to-r from-cobol-amber to-cobol-green text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                        <i class="fas fa-star mr-1"></i>Most Popular
+                    </span>
                 </div>
-                {% endif %}
+            {% endif %}
 
-                <div class="card-body text-center p-4">
-                    <h4 class="card-title fw-bold">{{ plan.name }}</h4>
-                    <p class="text-muted mb-4">{{ plan.description }}</p>
+            <div class="p-8 text-center">
+                <!-- Plan Header -->
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ plan.name }}</h3>
+                    <p class="text-gray-600 text-lg">{{ plan.description }}</p>
+                </div>
 
-                    <!-- Monthly Price -->
-                    <div class="mb-4">
-                        <span class="display-4 fw-bold">{{ plan.formattedPriceMonthly }}</span>
-                        <small class="text-muted">/month</small>
+                <!-- Monthly Price -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-center">
+                        <span class="text-5xl font-bold text-gray-900">{{ plan.formattedPriceMonthly }}</span>
+                        <span class="text-gray-600 ml-2 text-lg">/month</span>
                     </div>
-
-                    <!-- Yearly Price (if available) -->
                     {% if plan.priceYearly %}
-                    <div class="mb-4">
-                        <div class="alert alert-success">
-                            <strong>Save {{ plan.yearlyDiscount }}%</strong> with yearly billing<br>
-                            <span class="h5">{{ plan.formattedPriceYearly }}/year</span>
+                    <div class="mt-4 p-3 bg-cobol-green/10 rounded-lg border border-cobol-green/20">
+                        <div class="text-cobol-green font-semibold text-sm">
+                            <i class="fas fa-piggy-bank mr-1"></i>Save {{ plan.yearlyDiscount }}% with yearly billing
                         </div>
+                        <div class="text-gray-700 font-semibold">{{ plan.formattedPriceYearly }}/year</div>
                     </div>
                     {% endif %}
+                </div>
 
-                    <!-- Features -->
+                <!-- Features -->
+                <div class="space-y-4 mb-8 text-left">
                     {% if plan.features %}
-                    <ul class="list-unstyled mb-4">
                         {% for feature in plan.features %}
-                        <li class="mb-2">
-                            <i class="bi bi-check-circle-fill text-success me-2"></i>
-                            {{ feature }}
-                        </li>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-cobol-green mr-3 mt-1 flex-shrink-0"></i>
+                            <span class="text-gray-700">{{ feature }}</span>
+                        </div>
                         {% endfor %}
-                    </ul>
-                    {% endif %}
-
-                    <!-- Action Buttons -->
-                    {% if not app.user %}
-                        <div class="d-grid gap-2">
-                            <a href="{{ path('app_register') }}" class="btn {% if loop.index == 2 %}btn-primary{% else %}btn-outline-primary{% endif %} btn-lg">
-                                Get Started
-                            </a>
-                        </div>
-                    {% elseif is_granted('ROLE_SUBSCRIBER') %}
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-success btn-lg" disabled>
-                                <i class="bi bi-check-circle"></i> Current Plan
-                            </button>
-                        </div>
                     {% else %}
-                        <div class="d-grid gap-2 mb-3">
-                            <a href="{{ path('app_subscribe', {id: plan.id}) }}" class="btn {% if loop.index == 2 %}btn-primary{% else %}btn-outline-primary{% endif %} btn-lg">
-                                Subscribe Monthly
-                            </a>
-                            {% if plan.priceYearly %}
-                            <a href="{{ path('app_subscribe', {id: plan.id, yearly: 'true'}) }}" class="btn btn-outline-success">
-                                Subscribe Yearly <small>(Save {{ plan.yearlyDiscount }}%)</small>
-                            </a>
-                            {% endif %}
+                        <!-- Default features based on plan type -->
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-cobol-green mr-3 mt-1"></i>
+                            <span class="text-gray-700">Access to premium COBOL tutorials</span>
                         </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-cobol-green mr-3 mt-1"></i>
+                            <span class="text-gray-700">Enterprise integration examples</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-cobol-green mr-3 mt-1"></i>
+                            <span class="text-gray-700">{% if loop.index >= 2 %}Priority{% else %}Community{% endif %} support</span>
+                        </div>
+                        {% if loop.index >= 2 %}
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-cobol-green mr-3 mt-1"></i>
+                            <span class="text-gray-700">Advanced optimization techniques</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-cobol-green mr-3 mt-1"></i>
+                            <span class="text-gray-700">Exclusive expert Q&A sessions</span>
+                        </div>
+                        {% endif %}
+                        {% if loop.index >= 3 %}
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-cobol-green mr-3 mt-1"></i>
+                            <span class="text-gray-700">1-on-1 mentoring sessions</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check text-cobol-green mr-3 mt-1"></i>
+                            <span class="text-gray-700">Custom code reviews</span>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3">
+                    {% if not app.user %}
+                        <a href="{{ path('app_register') }}" class="w-full inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 {% if loop.index == 2 %}bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white hover:from-cobol-blue hover:to-cobol-cyan shadow-xl{% else %}border-2 border-cobol-cyan text-cobol-cyan hover:bg-cobol-cyan hover:text-white{% endif %}">
+                            <i class="fas fa-rocket mr-2"></i>Get Started
+                        </a>
+                    {% elseif is_granted('ROLE_SUBSCRIBER') %}
+                        <button class="w-full px-6 py-3 bg-cobol-green text-white rounded-xl font-semibold text-lg shadow-lg" disabled>
+                            <i class="fas fa-check-circle mr-2"></i>Current Plan
+                        </button>
+                    {% else %}
+                        <a href="{{ path('app_subscribe', {id: plan.id}) }}" class="w-full inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 mb-3 {% if loop.index == 2 %}bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white hover:from-cobol-blue hover:to-cobol-cyan shadow-xl{% else %}border-2 border-cobol-cyan text-cobol-cyan hover:bg-cobol-cyan hover:text-white{% endif %}">
+                            <i class="fas fa-credit-card mr-2"></i>Subscribe Monthly
+                        </a>
+                        {% if plan.priceYearly %}
+                        <a href="{{ path('app_subscribe', {id: plan.id, yearly: 'true'}) }}" class="w-full inline-flex items-center justify-center px-6 py-3 border-2 border-cobol-green text-cobol-green rounded-xl font-semibold hover:bg-cobol-green hover:text-white transition-all duration-200">
+                            <i class="fas fa-calendar-alt mr-2"></i>Subscribe Yearly
+                            <span class="ml-2 text-xs">(Save {{ plan.yearlyDiscount }}%)</span>
+                        </a>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -87,81 +133,127 @@
     </div>
 
     <!-- FAQ Section -->
-    <div class="row mt-5">
-        <div class="col-lg-8 offset-lg-2">
-            <h3 class="text-center mb-4">Frequently Asked Questions</h3>
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                <p class="text-xl text-gray-600">
+                    Everything you need to know about our COBOL learning platform
+                </p>
+            </div>
 
-            <div class="accordion" id="pricingFAQ">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+            <div class="space-y-6">
+                <div class="group bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover-lift">
+                    <div class="flex items-start justify-between cursor-pointer" onclick="toggleFAQ('faq1')">
+                        <h3 class="text-lg font-semibold text-gray-900 pr-4">
                             Can I cancel my subscription anytime?
-                        </button>
-                    </h2>
-                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#pricingFAQ">
-                        <div class="accordion-body">
-                            Yes, you can cancel your subscription at any time. You'll continue to have access to premium content until the end of your current billing period.
-                        </div>
+                        </h3>
+                        <i id="faq1-icon" class="fas fa-chevron-down text-cobol-cyan text-xl transition-transform"></i>
+                    </div>
+                    <div id="faq1" class="mt-4 text-gray-600 leading-relaxed">
+                        Yes, you can cancel your subscription at any time through your account dashboard or customer portal. You'll continue to have access to premium content until the end of your current billing period. No cancellation fees or hidden charges.
                     </div>
                 </div>
 
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                            Is there a free trial?
-                        </button>
-                    </h2>
-                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
-                        <div class="accordion-body">
-                            New subscribers get a 7-day free trial with full access to premium content. No credit card required to start your trial.
-                        </div>
+                <div class="group bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover-lift">
+                    <div class="flex items-start justify-between cursor-pointer" onclick="toggleFAQ('faq2')">
+                        <h3 class="text-lg font-semibold text-gray-900 pr-4">
+                            Is there a free trial available?
+                        </h3>
+                        <i id="faq2-icon" class="fas fa-chevron-down text-cobol-cyan text-xl transition-transform"></i>
+                    </div>
+                    <div id="faq2" class="mt-4 text-gray-600 leading-relaxed hidden">
+                        New subscribers get a 7-day free trial with full access to premium COBOL content. No credit card required to start your trial. You can explore all tutorials, code examples, and community features risk-free.
                     </div>
                 </div>
 
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                <div class="group bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover-lift">
+                    <div class="flex items-start justify-between cursor-pointer" onclick="toggleFAQ('faq3')">
+                        <h3 class="text-lg font-semibold text-gray-900 pr-4">
                             What payment methods do you accept?
-                        </button>
-                    </h2>
-                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
-                        <div class="accordion-body">
-                            We accept all major credit cards (Visa, Mastercard, American Express) and PayPal. All payments are processed securely through Stripe.
-                        </div>
+                        </h3>
+                        <i id="faq3-icon" class="fas fa-chevron-down text-cobol-cyan text-xl transition-transform"></i>
+                    </div>
+                    <div id="faq3" class="mt-4 text-gray-600 leading-relaxed hidden">
+                        We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and bank transfers. All payments are processed securely through Stripe with enterprise-grade encryption and fraud protection.
                     </div>
                 </div>
 
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                <div class="group bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover-lift">
+                    <div class="flex items-start justify-between cursor-pointer" onclick="toggleFAQ('faq4')">
+                        <h3 class="text-lg font-semibold text-gray-900 pr-4">
                             Can I change my plan later?
-                        </button>
-                    </h2>
-                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
-                        <div class="accordion-body">
-                            Yes, you can upgrade or downgrade your plan at any time from your account dashboard. Changes will be prorated and applied to your next billing cycle.
-                        </div>
+                        </h3>
+                        <i id="faq4-icon" class="fas fa-chevron-down text-cobol-cyan text-xl transition-transform"></i>
+                    </div>
+                    <div id="faq4" class="mt-4 text-gray-600 leading-relaxed hidden">
+                        Absolutely! You can upgrade or downgrade your plan at any time from your account dashboard. Changes are prorated automatically and applied to your next billing cycle. No restrictions or penalties for plan changes.
+                    </div>
+                </div>
+
+                <div class="group bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover-lift">
+                    <div class="flex items-start justify-between cursor-pointer" onclick="toggleFAQ('faq5')">
+                        <h3 class="text-lg font-semibold text-gray-900 pr-4">
+                            Do you offer enterprise or team discounts?
+                        </h3>
+                        <i id="faq5-icon" class="fas fa-chevron-down text-cobol-cyan text-xl transition-transform"></i>
+                    </div>
+                    <div id="faq5" class="mt-4 text-gray-600 leading-relaxed hidden">
+                        Yes! We offer special enterprise pricing for teams of 10 or more developers. Contact our sales team for custom pricing, dedicated support, and additional features like team management, progress tracking, and custom content.
+                    </div>
+                </div>
+
+                <div class="group bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover-lift">
+                    <div class="flex items-start justify-between cursor-pointer" onclick="toggleFAQ('faq6')">
+                        <h3 class="text-lg font-semibold text-gray-900 pr-4">
+                            What level of COBOL experience do I need?
+                        </h3>
+                        <i id="faq6-icon" class="fas fa-chevron-down text-cobol-cyan text-xl transition-transform"></i>
+                    </div>
+                    <div id="faq6" class="mt-4 text-gray-600 leading-relaxed hidden">
+                        Our platform is designed for all skill levels. Whether you're a complete beginner or an experienced COBOL developer looking to modernize your skills, we have content tailored to your needs. Start with fundamentals and progress to advanced enterprise integration patterns.
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- CTA Section -->
     {% if not app.user %}
-    <div class="row mt-5">
-        <div class="col-lg-8 offset-lg-2 text-center">
-            <div class="bg-light p-5 rounded">
-                <h3 class="fw-bold mb-3">Ready to get started?</h3>
-                <p class="text-muted mb-4">Join thousands of satisfied subscribers and start accessing premium content today.</p>
-                <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg">
-                    <i class="bi bi-person-plus"></i> Create Your Account
-                </a>
+    <section class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="bg-gradient-to-br from-cobol-navy to-cobol-blue rounded-2xl p-12 text-white">
+                <h2 class="text-4xl font-bold mb-6">Ready to Transform Your COBOL Skills?</h2>
+                <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                    Join thousands of satisfied developers and start accessing premium COBOL content today.
+                    Accelerate your career with modern development practices.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{{ path('app_register') }}" class="bg-white text-cobol-navy px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/90 transition-all duration-200 transform hover:scale-105 shadow-xl">
+                        <i class="fas fa-rocket mr-2"></i>Start Your Free Trial
+                    </a>
+                    <a href="{{ path('app_articles') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-cobol-navy transition-all duration-200 transform hover:scale-105">
+                        <i class="fas fa-eye mr-2"></i>Preview Content
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
     {% endif %}
 </div>
 
-<div class="mb-5"></div>
+<script>
+function toggleFAQ(faqId) {
+    const faqContent = document.getElementById(faqId);
+    const faqIcon = document.getElementById(faqId + '-icon');
+
+    if (faqContent.classList.contains('hidden')) {
+        faqContent.classList.remove('hidden');
+        faqIcon.style.transform = 'rotate(180deg)';
+    } else {
+        faqContent.classList.add('hidden');
+        faqIcon.style.transform = 'rotate(0deg)';
+    }
+}
+</script>
 {% endblock %}

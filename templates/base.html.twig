@@ -3,45 +3,283 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}COBOLCOBOL{% endblock %}</title>
-        <meta name="description" content="{% block meta_description %}Premium SaaS content platform with subscription-based access{% endblock %}">
+        <title>{% block title %}Čo bol COBOL?{% endblock %}</title>
+        <meta name="description" content="{% block meta_description %}Moderná platforma pre učenie COBOL programovania s prémiovým obsahom{% endblock %}">
 
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Bootstrap Icons -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Font Awesome for better icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <!-- Google Fonts - JetBrains Mono for COBOL coding feel -->
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'cobol': {
+                                'navy': '#0f172a',
+                                'blue': '#1e40af',
+                                'cyan': '#06b6d4',
+                                'green': '#059669',
+                                'amber': '#f59e0b',
+                                'red': '#dc2626'
+                            },
+                            'terminal': {
+                                'bg': '#0d1117',
+                                'text': '#c9d1d9',
+                                'accent': '#58a6ff',
+                                'success': '#238636',
+                                'warning': '#f85149',
+                                'border': '#30363d'
+                            }
+                        },
+                        fontFamily: {
+                            'mono': ['JetBrains Mono', 'monospace'],
+                            'sans': ['Inter', 'sans-serif']
+                        },
+                        animation: {
+                            'gradient': 'gradient 8s ease infinite',
+                            'float': 'float 3s ease-in-out infinite',
+                            'pulse-soft': 'pulse-soft 2s ease-in-out infinite alternate',
+                            'slide-up': 'slide-up 0.5s ease-out',
+                            'fade-in': 'fade-in 0.6s ease-out',
+                            'glow': 'glow 2s ease-in-out infinite alternate'
+                        },
+                        keyframes: {
+                            'gradient': {
+                                '0%, 100%': {
+                                    'background-size': '200% 200%',
+                                    'background-position': 'left center'
+                                },
+                                '50%': {
+                                    'background-size': '200% 200%',
+                                    'background-position': 'right center'
+                                }
+                            },
+                            'float': {
+                                '0%, 100%': { transform: 'translateY(0px)' },
+                                '50%': { transform: 'translateY(-10px)' }
+                            },
+                            'pulse-soft': {
+                                '0%': { opacity: '0.8' },
+                                '100%': { opacity: '1' }
+                            },
+                            'slide-up': {
+                                '0%': {
+                                    opacity: '0',
+                                    transform: 'translateY(20px)'
+                                },
+                                '100%': {
+                                    opacity: '1',
+                                    transform: 'translateY(0)'
+                                }
+                            },
+                            'fade-in': {
+                                '0%': { opacity: '0' },
+                                '100%': { opacity: '1' }
+                            },
+                            'glow': {
+                                '0%': {
+                                    'box-shadow': '0 0 5px #06b6d4, 0 0 10px #06b6d4, 0 0 15px #06b6d4'
+                                },
+                                '100%': {
+                                    'box-shadow': '0 0 10px #06b6d4, 0 0 20px #06b6d4, 0 0 30px #06b6d4'
+                                }
+                            }
+                        },
+                        backdropBlur: {
+                            'xs': '2px'
+                        }
+                    }
+                }
+            }
+        </script>
 
         {% block stylesheets %}
         <style>
-            .navbar-brand {
-                font-weight: 600;
-                font-size: 1.5rem;
+            /* Custom COBOL-themed styles */
+            .gradient-bg {
+                background: linear-gradient(-45deg, #0f172a, #1e40af, #06b6d4, #059669);
+                background-size: 400% 400%;
+                animation: gradient 15s ease infinite;
             }
-            .hero-section {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 100px 0;
+
+            .terminal-window {
+                background: #0d1117;
+                border: 1px solid #30363d;
+                border-radius: 8px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             }
-            .premium-badge {
-                background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
-                color: white;
-                padding: 4px 12px;
-                border-radius: 20px;
-                font-size: 0.8rem;
-                font-weight: 500;
+
+            .terminal-header {
+                background: #21262d;
+                border-bottom: 1px solid #30363d;
+                padding: 8px 16px;
+                border-radius: 8px 8px 0 0;
             }
-            .card-premium {
-                border-left: 4px solid #f5576c;
+
+            .terminal-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                display: inline-block;
+                margin-right: 8px;
             }
-            .pricing-card {
-                transition: transform 0.2s;
+
+            .dot-red { background: #ff5f56; }
+            .dot-yellow { background: #ffbd2e; }
+            .dot-green { background: #27ca3f; }
+
+            .code-block {
+                background: #0d1117;
+                color: #c9d1d9;
+                font-family: 'JetBrains Mono', monospace;
+                padding: 1rem;
+                border-radius: 8px;
+                border: 1px solid #30363d;
+                overflow-x: auto;
             }
-            .pricing-card:hover {
+
+            .syntax-keyword { color: #ff7b72; }
+            .syntax-string { color: #a5d6ff; }
+            .syntax-comment { color: #8b949e; }
+            .syntax-number { color: #79c0ff; }
+
+            .glass-card {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .hover-lift {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .hover-lift:hover {
                 transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             }
-            .pricing-card.featured {
-                border: 2px solid #007bff;
-                transform: scale(1.05);
+
+            .text-gradient {
+                background: linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .border-gradient {
+                border: 2px solid transparent;
+                background: linear-gradient(white, white) padding-box,
+                           linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6) border-box;
+            }
+
+            /* Custom scrollbar for terminal feel */
+            ::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #0d1117;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #30363d;
+                border-radius: 4px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #484f58;
+            }
+
+            /* Matrix-style animation for background */
+            .matrix-bg {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .matrix-bg::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background:
+                    linear-gradient(90deg, transparent 24%, rgba(6, 182, 212, 0.03) 25%, rgba(6, 182, 212, 0.03) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.03) 75%, rgba(6, 182, 212, 0.03) 76%, transparent 77%, transparent),
+                    linear-gradient(transparent 24%, rgba(6, 182, 212, 0.03) 25%, rgba(6, 182, 212, 0.03) 26%, transparent 27%, transparent 74%, rgba(6, 182, 212, 0.03) 75%, rgba(6, 182, 212, 0.03) 76%, transparent 77%, transparent);
+                background-size: 40px 40px;
+                pointer-events: none;
+            }
+
+            /* Responsive utilities */
+            .line-clamp-2 {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .line-clamp-3 {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            /* Mobile optimizations */
+            @media (max-width: 640px) {
+                .floating-code {
+                    display: none;
+                }
+
+                .hero-stats {
+                    grid-template-columns: repeat(1, 1fr);
+                    gap: 1rem;
+                }
+
+                .pricing-toggle {
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+
+                .terminal-window {
+                    font-size: 0.75rem;
+                }
+
+                .code-block {
+                    font-size: 0.75rem;
+                    padding: 0.75rem;
+                }
+            }
+
+            /* Improved focus states for accessibility */
+            .focus\:ring-cobol:focus {
+                --tw-ring-color: rgb(6 182 212 / 0.5);
+                box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+            }
+
+            /* Print styles */
+            @media print {
+                .gradient-bg,
+                .bg-gradient-to-r,
+                .bg-gradient-to-br {
+                    background: #f8fafc !important;
+                    color: #1f2937 !important;
+                }
+
+                .text-white {
+                    color: #1f2937 !important;
+                }
+
+                .shadow-lg,
+                .shadow-xl,
+                .shadow-2xl {
+                    box-shadow: none !important;
+                    border: 1px solid #e5e7eb !important;
+                }
             }
         </style>
         {% endblock %}
@@ -50,68 +288,128 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
+    <body class="bg-cobol-navy font-sans">
         <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="{{ path('app_home') }}">
-                    <i class="bi bi-layers"></i> COBOLCOBOL
-                </a>
+        <nav class="bg-terminal-bg/95 backdrop-blur-md border-b border-terminal-border sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <a href="{{ path('app_home') }}" class="flex items-center space-x-2 text-terminal-text hover:text-cobol-cyan transition-colors group">
+                            <div class="w-8 h-8 bg-gradient-to-r from-cobol-cyan to-cobol-blue rounded-lg flex items-center justify-center group-hover:animate-pulse">
+                                <i class="fas fa-terminal text-white text-sm"></i>
+                            </div>
+                            <span class="font-mono font-bold text-xl text-gradient">Čo bol COBOL?</span>
+                        </a>
+                    </div>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_home') }}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_articles') }}">Articles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_pricing') }}">Pricing</a>
-                        </li>
-                        {% if is_granted('ROLE_SUBSCRIBER') %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_premium') }}">
-                                <i class="bi bi-star-fill text-warning"></i> Premium
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-8">
+                            <a href="{{ path('app_home') }}" class="text-terminal-text hover:text-cobol-cyan px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-terminal-border/20 rounded-lg">
+                                <i class="fas fa-home mr-2"></i>Home
                             </a>
-                        </li>
-                        {% endif %}
-                    </ul>
+                            <a href="{{ path('app_articles') }}" class="text-terminal-text hover:text-cobol-cyan px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-terminal-border/20 rounded-lg">
+                                <i class="fas fa-newspaper mr-2"></i>Articles
+                            </a>
+                            <a href="{{ path('app_pricing') }}" class="text-terminal-text hover:text-cobol-cyan px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-terminal-border/20 rounded-lg">
+                                <i class="fas fa-tags mr-2"></i>Pricing
+                            </a>
+                            {% if is_granted('ROLE_SUBSCRIBER') %}
+                            <a href="{{ path('app_premium') }}" class="text-cobol-amber hover:text-cobol-cyan px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-terminal-border/20 rounded-lg">
+                                <i class="fas fa-crown mr-2"></i>Premium
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
 
-                    <ul class="navbar-nav">
-                        {% if app.user %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-person-circle"></i> {{ app.user.firstName }}
+                    <!-- User Actions -->
+                    <div class="hidden md:block">
+                        <div class="ml-4 flex items-center space-x-4">
+                            {% if app.user %}
+                                <!-- User Dropdown -->
+                                <div class="relative group">
+                                    <button class="flex items-center text-terminal-text hover:text-cobol-cyan text-sm font-medium bg-terminal-border/20 px-4 py-2 rounded-lg transition-all duration-200 hover:bg-terminal-border/40">
+                                        <i class="fas fa-user-circle mr-2"></i>
+                                        {{ app.user.firstName }}
+                                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                    </button>
+                                    <div class="absolute right-0 mt-2 w-48 bg-terminal-bg border border-terminal-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                        <a href="{{ path('app_dashboard') }}" class="flex items-center px-4 py-3 text-sm text-terminal-text hover:text-cobol-cyan hover:bg-terminal-border/20 transition-colors">
+                                            <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+                                        </a>
+                                        {% if app.user.stripeCustomerId %}
+                                        <a href="{{ path('app_manage_subscription') }}" class="flex items-center px-4 py-3 text-sm text-terminal-text hover:text-cobol-cyan hover:bg-terminal-border/20 transition-colors">
+                                            <i class="fas fa-credit-card mr-3"></i>Manage Subscription
+                                        </a>
+                                        {% endif %}
+                                        <div class="border-t border-terminal-border"></div>
+                                        <a href="{{ path('app_logout') }}" class="flex items-center px-4 py-3 text-sm text-terminal-text hover:text-cobol-red hover:bg-terminal-border/20 transition-colors">
+                                            <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                                        </a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <a href="{{ path('app_login') }}" class="text-terminal-text hover:text-cobol-cyan px-3 py-2 text-sm font-medium transition-colors">
+                                    Login
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{{ path('app_dashboard') }}">
-                                        <i class="bi bi-speedometer2"></i> Dashboard
-                                    </a></li>
-                                    {% if app.user.stripeCustomerId %}
-                                    <li><a class="dropdown-item" href="{{ path('app_manage_subscription') }}">
-                                        <i class="bi bi-credit-card"></i> Manage Subscription
-                                    </a></li>
-                                    {% endif %}
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">
-                                        <i class="bi bi-box-arrow-right"></i> Logout
-                                    </a></li>
-                                </ul>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_login') }}">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-primary btn-sm ms-2" href="{{ path('app_register') }}">Sign Up</a>
-                            </li>
-                        {% endif %}
-                    </ul>
+                                <a href="{{ path('app_register') }}" class="bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white px-6 py-2 rounded-lg text-sm font-medium hover:from-cobol-blue hover:to-cobol-cyan transition-all duration-200 transform hover:scale-105 shadow-lg">
+                                    Sign Up
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden">
+                        <button type="button" id="mobile-menu-button" class="text-terminal-text hover:text-cobol-cyan p-2 rounded-lg hover:bg-terminal-border/20 transition-colors">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div class="md:hidden" id="mobile-menu" style="display: none;">
+                <div class="px-2 pt-2 pb-3 space-y-1 bg-terminal-bg border-t border-terminal-border">
+                    <a href="{{ path('app_home') }}" class="block text-terminal-text hover:text-cobol-cyan px-3 py-2 text-base font-medium hover:bg-terminal-border/20 rounded-lg transition-colors">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="{{ path('app_articles') }}" class="block text-terminal-text hover:text-cobol-cyan px-3 py-2 text-base font-medium hover:bg-terminal-border/20 rounded-lg transition-colors">
+                        <i class="fas fa-newspaper mr-2"></i>Articles
+                    </a>
+                    <a href="{{ path('app_pricing') }}" class="block text-terminal-text hover:text-cobol-cyan px-3 py-2 text-base font-medium hover:bg-terminal-border/20 rounded-lg transition-colors">
+                        <i class="fas fa-tags mr-2"></i>Pricing
+                    </a>
+                    {% if is_granted('ROLE_SUBSCRIBER') %}
+                    <a href="{{ path('app_premium') }}" class="block text-cobol-amber hover:text-cobol-cyan px-3 py-2 text-base font-medium hover:bg-terminal-border/20 rounded-lg transition-colors">
+                        <i class="fas fa-crown mr-2"></i>Premium
+                    </a>
+                    {% endif %}
+                    {% if app.user %}
+                        <div class="border-t border-terminal-border pt-4 mt-4">
+                            <a href="{{ path('app_dashboard') }}" class="block text-terminal-text hover:text-cobol-cyan px-3 py-2 text-base font-medium hover:bg-terminal-border/20 rounded-lg transition-colors">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                            </a>
+                            {% if app.user.stripeCustomerId %}
+                            <a href="{{ path('app_manage_subscription') }}" class="block text-terminal-text hover:text-cobol-cyan px-3 py-2 text-base font-medium hover:bg-terminal-border/20 rounded-lg transition-colors">
+                                <i class="fas fa-credit-card mr-2"></i>Manage Subscription
+                            </a>
+                            {% endif %}
+                            <a href="{{ path('app_logout') }}" class="block text-terminal-text hover:text-cobol-red px-3 py-2 text-base font-medium hover:bg-terminal-border/20 rounded-lg transition-colors">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="border-t border-terminal-border pt-4 mt-4 space-y-2">
+                            <a href="{{ path('app_login') }}" class="block text-terminal-text hover:text-cobol-cyan px-3 py-2 text-base font-medium hover:bg-terminal-border/20 rounded-lg transition-colors">
+                                Login
+                            </a>
+                            <a href="{{ path('app_register') }}" class="block bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white px-3 py-2 rounded-lg text-base font-medium text-center mx-3">
+                                Sign Up
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>
@@ -119,46 +417,134 @@
         <!-- Flash Messages -->
         {% for type, messages in app.flashes %}
             {% for message in messages %}
-                <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div class="mx-4 mt-4 p-4 rounded-lg border-l-4
+                    {% if type == 'error' or type == 'danger' %}
+                        bg-red-50 border-red-400 text-red-700
+                    {% elseif type == 'success' %}
+                        bg-green-50 border-green-400 text-green-700
+                    {% elseif type == 'warning' %}
+                        bg-yellow-50 border-yellow-400 text-yellow-700
+                    {% else %}
+                        bg-blue-50 border-blue-400 text-blue-700
+                    {% endif %}
+                    animate-slide-up">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            {% if type == 'error' or type == 'danger' %}
+                                <i class="fas fa-exclamation-triangle"></i>
+                            {% elseif type == 'success' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elseif type == 'warning' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle"></i>
+                            {% endif %}
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
+                        <div class="ml-auto pl-3">
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" class="inline-flex text-gray-400 hover:text-gray-600 focus:outline-none">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
         {% endfor %}
 
         <!-- Main Content -->
-        <main>
+        <main class="min-h-screen">
             {% block body %}{% endblock %}
         </main>
 
         <!-- Footer -->
-        <footer class="bg-dark text-light py-4 mt-5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><i class="bi bi-layers"></i> COBOLCOBOL</h5>
-                        <p class="text-muted">Premium SaaS content platform with subscription-based access.</p>
+        <footer class="bg-terminal-bg border-t border-terminal-border mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <!-- Brand Section -->
+                    <div class="col-span-1 md:col-span-2">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <div class="w-8 h-8 bg-gradient-to-r from-cobol-cyan to-cobol-blue rounded-lg flex items-center justify-center">
+                                <i class="fas fa-terminal text-white text-sm"></i>
+                            </div>
+                            <span class="font-mono font-bold text-xl text-gradient">Čo bol COBOL?</span>
+                        </div>
+                        <p class="text-terminal-text/70 mb-6 max-w-md">
+                            Moderná platforma pre učenie COBOL programovania s prémiovým obsahom, tutoriálmi a zdrojmi pre vývojárov.
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-terminal-text hover:text-cobol-cyan transition-colors">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                            <a href="#" class="text-terminal-text hover:text-cobol-cyan transition-colors">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                            <a href="#" class="text-terminal-text hover:text-cobol-cyan transition-colors">
+                                <i class="fab fa-linkedin text-xl"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <h6>Quick Links</h6>
-                        <ul class="list-unstyled">
-                            <li><a href="{{ path('app_pricing') }}" class="text-light text-decoration-none">Pricing</a></li>
-                            <li><a href="{{ path('app_articles') }}" class="text-light text-decoration-none">Articles</a></li>
+
+                    <!-- Quick Links -->
+                    <div>
+                        <h3 class="text-terminal-text font-semibold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="{{ path('app_pricing') }}" class="text-terminal-text/70 hover:text-cobol-cyan transition-colors flex items-center">
+                                <i class="fas fa-tags mr-2 text-xs"></i>Pricing
+                            </a></li>
+                            <li><a href="{{ path('app_articles') }}" class="text-terminal-text/70 hover:text-cobol-cyan transition-colors flex items-center">
+                                <i class="fas fa-newspaper mr-2 text-xs"></i>Articles
+                            </a></li>
                             {% if not app.user %}
-                            <li><a href="{{ path('app_register') }}" class="text-light text-decoration-none">Sign Up</a></li>
+                            <li><a href="{{ path('app_register') }}" class="text-terminal-text/70 hover:text-cobol-cyan transition-colors flex items-center">
+                                <i class="fas fa-user-plus mr-2 text-xs"></i>Sign Up
+                            </a></li>
                             {% endif %}
                         </ul>
                     </div>
+
+                    <!-- Resources -->
+                    <div>
+                        <h3 class="text-terminal-text font-semibold mb-4">Resources</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-terminal-text/70 hover:text-cobol-cyan transition-colors flex items-center">
+                                <i class="fas fa-book mr-2 text-xs"></i>Documentation
+                            </a></li>
+                            <li><a href="#" class="text-terminal-text/70 hover:text-cobol-cyan transition-colors flex items-center">
+                                <i class="fas fa-code mr-2 text-xs"></i>API Reference
+                            </a></li>
+                            <li><a href="#" class="text-terminal-text/70 hover:text-cobol-cyan transition-colors flex items-center">
+                                <i class="fas fa-life-ring mr-2 text-xs"></i>Support
+                            </a></li>
+                        </ul>
+                    </div>
                 </div>
-                <hr class="my-4">
-                <div class="text-center text-muted">
-                    <small>&copy; {{ 'now'|date('Y') }} COBOLCOBOL. Built with Symfony & Stripe.</small>
+
+                <!-- Terminal-style divider -->
+                <div class="mt-8 pt-8 border-t border-terminal-border">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="text-terminal-text/50 text-sm font-mono">
+                            <span class="text-cobol-cyan">$</span> &copy; {{ 'now'|date('Y') }} Čo bol COBOL?. Built with
+                            <span class="text-cobol-amber">Symfony</span> &
+                            <span class="text-cobol-green">Stripe</span>.
+                        </div>
+                        <div class="mt-4 md:mt-0 text-terminal-text/50 text-sm font-mono">
+                            <span class="text-cobol-cyan">></span> Status:
+                            <span class="text-cobol-green animate-pulse">ONLINE</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>
 
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Mobile menu toggle script -->
+        <script>
+            document.getElementById('mobile-menu-button').addEventListener('click', function() {
+                const menu = document.getElementById('mobile-menu');
+                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            });
+        </script>
         {% block extra_javascripts %}{% endblock %}
     </body>
 </html>

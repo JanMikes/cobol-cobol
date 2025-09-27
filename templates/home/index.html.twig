@@ -1,82 +1,237 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}COBOLCOBOL - Premium SaaS Content Platform{% endblock %}
+{% block title %}Čo bol COBOL? - Moderná COBOL vývojárska platforma{% endblock %}
 
 {% block body %}
     <!-- Hero Section -->
-    <section class="hero-section text-center">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-4">
-                        Welcome to COBOLCOBOL
-                    </h1>
-                    <p class="lead mb-5">
-                        Access premium content and exclusive articles with our subscription-based platform.
-                        Join thousands of subscribers who trust COBOLCOBOL for quality content.
-                    </p>
-                    {% if not app.user %}
-                        <div class="d-grid gap-2 d-md-block">
-                            <a href="{{ path('app_register') }}" class="btn btn-light btn-lg px-5 me-3">
-                                <i class="bi bi-person-plus"></i> Get Started Free
-                            </a>
-                            <a href="{{ path('app_pricing') }}" class="btn btn-outline-light btn-lg px-5">
-                                <i class="bi bi-eye"></i> View Pricing
-                            </a>
-                        </div>
-                    {% else %}
-                        <div class="d-grid gap-2 d-md-block">
-                            <a href="{{ path('app_dashboard') }}" class="btn btn-light btn-lg px-5 me-3">
-                                <i class="bi bi-speedometer2"></i> Go to Dashboard
-                            </a>
-                            {% if not is_granted('ROLE_SUBSCRIBER') %}
-                                <a href="{{ path('app_pricing') }}" class="btn btn-outline-light btn-lg px-5">
-                                    <i class="bi bi-star"></i> Upgrade to Premium
-                                </a>
-                            {% endif %}
-                        </div>
-                    {% endif %}
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden gradient-bg">
+        <!-- Animated background grid -->
+        <div class="absolute inset-0 matrix-bg opacity-30"></div>
+
+        <!-- Floating code elements -->
+        <div class="floating-code absolute top-16 left-8 opacity-25 animate-float hidden md:block">
+            <div class="terminal-window w-80">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                    <span class="text-white/60 text-xs ml-4 font-mono">HELLO-WORLD.cbl</span>
+                </div>
+                <div class="p-4 font-mono text-xs space-y-1">
+                    <div class="text-cobol-cyan">IDENTIFICATION DIVISION.</div>
+                    <div class="text-terminal-text">PROGRAM-ID. HELLO-WORLD.</div>
+                    <div class="text-terminal-text">AUTHOR. COBOL DEVELOPER.</div>
+                    <div></div>
+                    <div class="text-cobol-green">DATA DIVISION.</div>
+                    <div class="text-cobol-green">WORKING-STORAGE SECTION.</div>
+                    <div class="text-terminal-text">01 <span class="text-cobol-amber">WS-MESSAGE</span> <span class="syntax-keyword">PIC</span> <span class="text-cobol-amber">X(30)</span></div>
+                    <div class="text-terminal-text">   <span class="syntax-keyword">VALUE</span> <span class="syntax-string">'Hello, COBOL World!'</span>.</div>
+                    <div></div>
+                    <div class="text-cobol-cyan">PROCEDURE DIVISION.</div>
+                    <div class="text-terminal-text"><span class="syntax-keyword">DISPLAY</span> WS-MESSAGE.</div>
+                    <div class="text-terminal-text"><span class="syntax-keyword">STOP RUN</span>.</div>
                 </div>
             </div>
+        </div>
+
+        <div class="floating-code absolute bottom-16 right-8 opacity-25 animate-float hidden lg:block" style="animation-delay: 1s;">
+            <div class="terminal-window w-72">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                    <span class="text-white/60 text-xs ml-4 font-mono">DATA-PROC.cbl</span>
+                </div>
+                <div class="p-4 font-mono text-xs space-y-1">
+                    <div class="text-cobol-green">WORKING-STORAGE SECTION.</div>
+                    <div class="text-terminal-text">01 <span class="text-cobol-amber">EMPLOYEE-RECORD</span>.</div>
+                    <div class="text-terminal-text">   05 <span class="text-cobol-amber">EMP-ID</span>     <span class="syntax-keyword">PIC</span> <span class="text-cobol-amber">9(6)</span>.</div>
+                    <div class="text-terminal-text">   05 <span class="text-cobol-amber">EMP-NAME</span>   <span class="syntax-keyword">PIC</span> <span class="text-cobol-amber">X(25)</span>.</div>
+                    <div class="text-terminal-text">   05 <span class="text-cobol-amber">EMP-SALARY</span> <span class="syntax-keyword">PIC</span> <span class="text-cobol-amber">9(8)V99</span>.</div>
+                    <div></div>
+                    <div class="text-cobol-cyan">PROCEDURE DIVISION.</div>
+                    <div class="text-terminal-text"><span class="syntax-keyword">READ</span> EMPLOYEE-FILE</div>
+                    <div class="text-terminal-text">   <span class="syntax-keyword">INTO</span> EMPLOYEE-RECORD</div>
+                    <div class="text-terminal-text"><span class="syntax-keyword">IF</span> EMP-SALARY > 50000</div>
+                    <div class="text-terminal-text">   <span class="syntax-keyword">DISPLAY</span> <span class="syntax-string">'Senior Employee'</span></div>
+                    <div class="text-terminal-text"><span class="syntax-keyword">END-IF</span>.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional floating element for larger screens -->
+        <div class="floating-code absolute top-1/2 left-4 opacity-20 animate-float hidden xl:block" style="animation-delay: 2s;">
+            <div class="terminal-window w-64">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                    <span class="text-white/60 text-xs ml-4 font-mono">MODERN.cbl</span>
+                </div>
+                <div class="p-3 font-mono text-xs space-y-1">
+                    <div class="syntax-comment">* Modern COBOL Features</div>
+                    <div class="text-cobol-cyan">01 <span class="text-cobol-amber">JSON-DATA</span>.</div>
+                    <div class="text-terminal-text">   05 <span class="text-cobol-amber">CUSTOMER-ID</span> <span class="syntax-keyword">PIC</span> <span class="text-cobol-amber">9(8)</span>.</div>
+                    <div class="text-terminal-text">   05 <span class="text-cobol-amber">ORDER-DATE</span>  <span class="syntax-keyword">PIC</span> <span class="text-cobol-amber">X(10)</span>.</div>
+                    <div></div>
+                    <div class="text-terminal-text"><span class="syntax-keyword">CALL</span> <span class="syntax-string">'JSON-PARSE'</span></div>
+                    <div class="text-terminal-text">   <span class="syntax-keyword">USING</span> JSON-STRING</div>
+                    <div class="text-terminal-text">   <span class="syntax-keyword">GIVING</span> JSON-DATA.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <!-- Main heading with typing animation -->
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in">
+                    <span class="font-mono text-white">Čo bol</span><span class="text-cobol-amber font-mono"> COBOL?</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-xl md:text-2xl text-white/90 mb-8 animate-slide-up">
+                    Master Modern COBOL Development with
+                    <span class="text-cobol-cyan font-semibold">Premium Content</span> &
+                    <span class="text-cobol-amber font-semibold">Expert Tutorials</span>
+                </p>
+
+                <!-- Feature highlights -->
+                <div class="flex flex-wrap justify-center gap-4 mb-10 animate-slide-up" style="animation-delay: 0.3s;">
+                    <span class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/80 text-sm border border-white/20">
+                        <i class="fas fa-code mr-2 text-cobol-cyan"></i>Modern COBOL Syntax
+                    </span>
+                    <span class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/80 text-sm border border-white/20">
+                        <i class="fas fa-database mr-2 text-cobol-green"></i>Enterprise Integration
+                    </span>
+                    <span class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/80 text-sm border border-white/20">
+                        <i class="fas fa-rocket mr-2 text-cobol-amber"></i>Performance Optimization
+                    </span>
+                </div>
+
+                <!-- Action buttons -->
+                {% if not app.user %}
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style="animation-delay: 0.6s;">
+                        <a href="{{ path('app_register') }}" class="bg-white text-cobol-navy px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/90 transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-2xl">
+                            <i class="fas fa-rocket mr-2"></i>Start Learning Free
+                        </a>
+                        <a href="{{ path('app_pricing') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-cobol-navy transition-all duration-200 transform hover:scale-105">
+                            <i class="fas fa-eye mr-2"></i>View Pricing
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style="animation-delay: 0.6s;">
+                        <a href="{{ path('app_dashboard') }}" class="bg-white text-cobol-navy px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/90 transition-all duration-200 transform hover:scale-105 shadow-xl">
+                            <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+                        </a>
+                        {% if not is_granted('ROLE_SUBSCRIBER') %}
+                            <a href="{{ path('app_pricing') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-cobol-navy transition-all duration-200 transform hover:scale-105">
+                                <i class="fas fa-crown mr-2"></i>Upgrade to Premium
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <!-- Stats -->
+                <div class="hero-stats grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16 animate-fade-in" style="animation-delay: 0.9s;">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white font-mono">1000+</div>
+                        <div class="text-white/70 text-sm">Active Developers</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white font-mono">50+</div>
+                        <div class="text-white/70 text-sm">Premium Tutorials</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white font-mono">24/7</div>
+                        <div class="text-white/70 text-sm">Expert Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-white/50 text-xl"></i>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col-lg-12">
-                    <h2 class="display-5 fw-bold">Why Choose COBOLCOBOL?</h2>
-                    <p class="lead text-muted">Premium features designed for content lovers</p>
-                </div>
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    Why Choose <span class="text-gradient font-mono">COBOLCOBOL</span>?
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Comprehensive platform designed for modern COBOL developers and enterprise teams
+                </p>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="bi bi-journal-text text-white fs-2"></i>
-                        </div>
-                        <h4>Premium Articles</h4>
-                        <p class="text-muted">Access exclusive, high-quality articles written by industry experts.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="group bg-white rounded-xl p-8 shadow-lg hover-lift border border-gray-200">
+                    <div class="w-16 h-16 bg-gradient-to-r from-cobol-cyan to-cobol-blue rounded-lg flex items-center justify-center mb-6 group-hover:animate-pulse">
+                        <i class="fas fa-code text-white text-2xl"></i>
                     </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Modern COBOL Syntax</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Learn the latest COBOL standards with comprehensive tutorials covering object-oriented programming, JSON handling, and modern development practices.
+                    </p>
                 </div>
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="bi bi-shield-check text-white fs-2"></i>
-                        </div>
-                        <h4>Secure & Reliable</h4>
-                        <p class="text-muted">Your data is protected with enterprise-grade security and reliability.</p>
+
+                <!-- Feature 2 -->
+                <div class="group bg-white rounded-xl p-8 shadow-lg hover-lift border border-gray-200">
+                    <div class="w-16 h-16 bg-gradient-to-r from-cobol-green to-cobol-cyan rounded-lg flex items-center justify-center mb-6 group-hover:animate-pulse">
+                        <i class="fas fa-database text-white text-2xl"></i>
                     </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Enterprise Integration</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Master enterprise-grade COBOL development with tutorials on DB2, IMS, CICS, and modern web service integration patterns.
+                    </p>
                 </div>
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <div class="bg-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="bi bi-lightning-charge text-white fs-2"></i>
-                        </div>
-                        <h4>Fast & Modern</h4>
-                        <p class="text-muted">Built with modern technology for the best user experience.</p>
+
+                <!-- Feature 3 -->
+                <div class="group bg-white rounded-xl p-8 shadow-lg hover-lift border border-gray-200">
+                    <div class="w-16 h-16 bg-gradient-to-r from-cobol-amber to-cobol-green rounded-lg flex items-center justify-center mb-6 group-hover:animate-pulse">
+                        <i class="fas fa-rocket text-white text-2xl"></i>
                     </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Performance Optimization</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Discover advanced techniques for optimizing COBOL applications, memory management, and best practices for mainframe environments.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="group bg-white rounded-xl p-8 shadow-lg hover-lift border border-gray-200">
+                    <div class="w-16 h-16 bg-gradient-to-r from-cobol-blue to-cobol-amber rounded-lg flex items-center justify-center mb-6 group-hover:animate-pulse">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Security Best Practices</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Learn enterprise security patterns, data protection, and secure coding practices for mission-critical COBOL applications.
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="group bg-white rounded-xl p-8 shadow-lg hover-lift border border-gray-200">
+                    <div class="w-16 h-16 bg-gradient-to-r from-cobol-red to-cobol-blue rounded-lg flex items-center justify-center mb-6 group-hover:animate-pulse">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Expert Community</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Connect with seasoned COBOL professionals, share knowledge, and get answers from industry experts with decades of experience.
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="group bg-white rounded-xl p-8 shadow-lg hover-lift border border-gray-200">
+                    <div class="w-16 h-16 bg-gradient-to-r from-cobol-green to-cobol-red rounded-lg flex items-center justify-center mb-6 group-hover:animate-pulse">
+                        <i class="fas fa-clock text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">24/7 Access</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Access your learning materials anytime, anywhere. Download resources for offline study and never miss a beat in your development journey.
+                    </p>
                 </div>
             </div>
         </div>
@@ -84,55 +239,72 @@
 
     <!-- Recent Articles Section -->
     {% if recent_articles %}
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row mb-5">
-                <div class="col-lg-12 text-center">
-                    <h2 class="display-6 fw-bold">Latest Articles</h2>
-                    <p class="lead text-muted">Discover our most recent content</p>
-                </div>
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Latest COBOL Insights</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Stay updated with the latest COBOL developments, best practices, and industry insights
+                </p>
             </div>
-            <div class="row g-4">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {% for article in recent_articles %}
-                <div class="col-md-4">
-                    <div class="card h-100 {% if article.isPremium %}card-premium{% endif %}">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title">{{ article.title }}</h5>
+                <article class="group bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover-lift transition-all duration-300 {% if article.isPremium %}border-gradient{% endif %}">
+                    <!-- Article Header -->
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
                                 {% if article.isPremium %}
-                                    <span class="premium-badge">
-                                        <i class="bi bi-star-fill"></i> Premium
-                                    </span>
+                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-cobol-amber to-cobol-green text-white mb-3">
+                                        <i class="fas fa-crown mr-1"></i>Premium
+                                    </div>
                                 {% endif %}
-                            </div>
-                            <p class="card-text text-muted">{{ article.preview(120) }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">
-                                    <i class="bi bi-clock"></i> {{ article.readingTime }} min read
-                                </small>
-                                <small class="text-muted">
-                                    {{ article.publishedAt ? article.publishedAt.format('M d, Y') : 'Draft' }}
-                                </small>
+                                <h3 class="text-xl font-semibold text-gray-900 group-hover:text-cobol-blue transition-colors line-clamp-2">
+                                    {{ article.title }}
+                                </h3>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent">
+
+                        <p class="text-gray-600 mb-6 line-clamp-3">{{ article.preview(120) }}</p>
+
+                        <!-- Article Meta -->
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-clock mr-2 text-cobol-cyan"></i>
+                                {{ article.readingTime }} min read
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar mr-2 text-cobol-cyan"></i>
+                                {{ article.publishedAt ? article.publishedAt.format('M d, Y') : 'Draft' }}
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="flex items-center">
                             {% if article.isPremium and not is_granted('ROLE_SUBSCRIBER') %}
-                                <a href="{{ path('app_pricing') }}" class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-lock"></i> Upgrade to Read
+                                <a href="{{ path('app_pricing') }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-cobol-amber to-cobol-green text-white rounded-lg font-medium hover:from-cobol-green hover:to-cobol-amber transition-all duration-200 group">
+                                    <i class="fas fa-lock mr-2"></i>
+                                    Upgrade to Read
+                                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                                 </a>
                             {% else %}
-                                <a href="{{ path('app_article_show', {slug: article.slug}) }}" class="btn btn-primary btn-sm">
-                                    <i class="bi bi-arrow-right"></i> Read Article
+                                <a href="{{ path('app_article_show', {slug: article.slug}) }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white rounded-lg font-medium hover:from-cobol-blue hover:to-cobol-cyan transition-all duration-200 group">
+                                    Read Article
+                                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                                 </a>
                             {% endif %}
                         </div>
                     </div>
-                </div>
+                </article>
                 {% endfor %}
             </div>
-            <div class="text-center mt-4">
-                <a href="{{ path('app_articles') }}" class="btn btn-outline-primary">
-                    <i class="bi bi-collection"></i> View All Articles
+
+            <div class="text-center mt-12">
+                <a href="{{ path('app_articles') }}" class="inline-flex items-center px-8 py-3 border-2 border-cobol-cyan text-cobol-cyan rounded-lg font-semibold hover:bg-cobol-cyan hover:text-white transition-all duration-200 group">
+                    <i class="fas fa-newspaper mr-2"></i>
+                    View All Articles
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </a>
             </div>
         </div>
@@ -141,67 +313,167 @@
 
     <!-- Pricing Preview -->
     {% if plans %}
-    <section class="py-5">
-        <div class="container">
-            <div class="row mb-5">
-                <div class="col-lg-12 text-center">
-                    <h2 class="display-6 fw-bold">Simple Pricing</h2>
-                    <p class="lead text-muted">Choose the plan that's right for you</p>
-                </div>
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Simple, Transparent Pricing</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Choose the perfect plan for your COBOL learning journey
+                </p>
             </div>
-            <div class="row justify-content-center g-4">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 {% for plan in plans|slice(0, 2) %}
-                <div class="col-md-5">
-                    <div class="card pricing-card h-100 {% if loop.last %}featured{% endif %}">
-                        <div class="card-body text-center p-4">
-                            <h5 class="card-title">{{ plan.name }}</h5>
-                            <div class="my-4">
-                                <span class="display-4 fw-bold">{{ plan.formattedPriceMonthly }}</span>
-                                <small class="text-muted">/month</small>
+                <div class="relative bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden hover-lift transition-all duration-300 {% if loop.last %}border-gradient transform scale-105{% endif %}">
+                    {% if loop.last %}
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <span class="bg-gradient-to-r from-cobol-amber to-cobol-green text-white px-6 py-2 rounded-full text-sm font-semibold">
+                                Most Popular
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    <div class="p-8 text-center">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name }}</h3>
+                        <p class="text-gray-600 mb-8">{{ plan.description }}</p>
+
+                        <!-- Price -->
+                        <div class="mb-8">
+                            <span class="text-5xl font-bold text-gray-900">{{ plan.formattedPriceMonthly }}</span>
+                            <span class="text-gray-600 ml-2">/month</span>
+                        </div>
+
+                        <!-- Features placeholder -->
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center text-gray-700">
+                                <i class="fas fa-check text-cobol-green mr-3"></i>
+                                <span>Access to premium COBOL tutorials</span>
                             </div>
-                            <p class="text-muted">{{ plan.description }}</p>
-                            {% if not app.user %}
-                                <a href="{{ path('app_register') }}" class="btn {% if loop.last %}btn-primary{% else %}btn-outline-primary{% endif %} btn-lg w-100">
-                                    Get Started
-                                </a>
-                            {% elseif not is_granted('ROLE_SUBSCRIBER') %}
-                                <a href="{{ path('app_subscribe', {id: plan.id}) }}" class="btn {% if loop.last %}btn-primary{% else %}btn-outline-primary{% endif %} btn-lg w-100">
-                                    Subscribe Now
-                                </a>
-                            {% else %}
-                                <button class="btn btn-success btn-lg w-100" disabled>
-                                    <i class="bi bi-check-circle"></i> Subscribed
-                                </button>
+                            <div class="flex items-center text-gray-700">
+                                <i class="fas fa-check text-cobol-green mr-3"></i>
+                                <span>Enterprise integration examples</span>
+                            </div>
+                            <div class="flex items-center text-gray-700">
+                                <i class="fas fa-check text-cobol-green mr-3"></i>
+                                <span>{% if loop.last %}Priority{% else %}Community{% endif %} support</span>
+                            </div>
+                            {% if loop.last %}
+                            <div class="flex items-center text-gray-700">
+                                <i class="fas fa-check text-cobol-green mr-3"></i>
+                                <span>Advanced optimization techniques</span>
+                            </div>
+                            <div class="flex items-center text-gray-700">
+                                <i class="fas fa-check text-cobol-green mr-3"></i>
+                                <span>Exclusive expert Q&A sessions</span>
+                            </div>
                             {% endif %}
                         </div>
+
+                        <!-- Action Button -->
+                        {% if not app.user %}
+                            <a href="{{ path('app_register') }}" class="w-full inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:scale-105 {% if loop.last %}bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white hover:from-cobol-blue hover:to-cobol-cyan shadow-xl{% else %}border-2 border-cobol-cyan text-cobol-cyan hover:bg-cobol-cyan hover:text-white{% endif %}">
+                                Get Started
+                            </a>
+                        {% elseif not is_granted('ROLE_SUBSCRIBER') %}
+                            <a href="{{ path('app_subscribe', {id: plan.id}) }}" class="w-full inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:scale-105 {% if loop.last %}bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white hover:from-cobol-blue hover:to-cobol-cyan shadow-xl{% else %}border-2 border-cobol-cyan text-cobol-cyan hover:bg-cobol-cyan hover:text-white{% endif %}">
+                                Subscribe Now
+                            </a>
+                        {% else %}
+                            <button class="w-full px-6 py-3 bg-cobol-green text-white rounded-lg font-semibold text-lg" disabled>
+                                <i class="fas fa-check-circle mr-2"></i>Current Plan
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
             </div>
-            <div class="text-center mt-4">
-                <a href="{{ path('app_pricing') }}" class="btn btn-outline-primary">
-                    <i class="bi bi-list-ul"></i> View All Plans
+
+            <div class="text-center mt-12">
+                <a href="{{ path('app_pricing') }}" class="inline-flex items-center px-8 py-3 border-2 border-gray-400 text-gray-700 rounded-lg font-semibold hover:border-cobol-cyan hover:text-cobol-cyan transition-all duration-200 group">
+                    <i class="fas fa-list mr-2"></i>
+                    View All Plans
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                 </a>
             </div>
         </div>
     </section>
     {% endif %}
 
-    <!-- CTA Section -->
-    {% if not app.user %}
-    <section class="py-5 bg-primary text-white">
-        <div class="container text-center">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="display-6 fw-bold mb-4">Ready to Get Started?</h2>
-                    <p class="lead mb-4">
-                        Join COBOLCOBOL today and unlock access to premium content,
-                        exclusive articles, and a community of like-minded individuals.
+    <!-- Code Sample Section -->
+    <section class="py-20 bg-cobol-navy">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-white mb-4">
+                    Experience Modern <span class="font-mono text-cobol-cyan">COBOL</span>
+                </h2>
+                <p class="text-xl text-white/80 max-w-3xl mx-auto">
+                    See how our platform teaches you to write clean, efficient, and maintainable COBOL code
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="terminal-window">
+                    <div class="terminal-header">
+                        <span class="terminal-dot dot-red"></span>
+                        <span class="terminal-dot dot-yellow"></span>
+                        <span class="terminal-dot dot-green"></span>
+                        <span class="text-white/60 text-sm ml-4 font-mono">COBOL-EXAMPLE.cbl</span>
+                    </div>
+                    <div class="p-6 font-mono text-sm overflow-x-auto">
+                        <div class="space-y-1">
+                            <div><span class="syntax-comment">      * Modern COBOL with JSON Integration</span></div>
+                            <div><span class="syntax-keyword">       IDENTIFICATION DIVISION.</span></div>
+                            <div><span class="text-terminal-text">       PROGRAM-ID. </span><span class="syntax-string">JSON-PROCESSOR</span><span class="text-terminal-text">.</span></div>
+                            <div></div>
+                            <div><span class="syntax-keyword">       DATA DIVISION.</span></div>
+                            <div><span class="syntax-keyword">       WORKING-STORAGE SECTION.</span></div>
+                            <div><span class="text-terminal-text">       </span><span class="syntax-number">01</span><span class="text-terminal-text"> </span><span class="syntax-string">WS-JSON-DATA</span><span class="text-terminal-text">     </span><span class="syntax-keyword">PIC</span><span class="text-terminal-text"> </span><span class="syntax-string">X(1000)</span><span class="text-terminal-text">.</span></div>
+                            <div><span class="text-terminal-text">       </span><span class="syntax-number">01</span><span class="text-terminal-text"> </span><span class="syntax-string">WS-RESPONSE</span><span class="text-terminal-text">       </span><span class="syntax-keyword">PIC</span><span class="text-terminal-text"> </span><span class="syntax-string">X(500)</span><span class="text-terminal-text">.</span></div>
+                            <div></div>
+                            <div><span class="syntax-keyword">       PROCEDURE DIVISION.</span></div>
+                            <div><span class="text-terminal-text">       </span><span class="syntax-keyword">PERFORM</span><span class="text-terminal-text"> PROCESS-JSON-API</span></div>
+                            <div><span class="text-terminal-text">       </span><span class="syntax-keyword">STOP RUN</span><span class="text-terminal-text">.</span></div>
+                            <div></div>
+                            <div><span class="text-terminal-text">       PROCESS-JSON-API.</span></div>
+                            <div><span class="text-terminal-text">           </span><span class="syntax-keyword">CALL</span><span class="text-terminal-text"> </span><span class="syntax-string">'HTTP-GET'</span><span class="text-terminal-text"> </span><span class="syntax-keyword">USING</span><span class="text-terminal-text"> WS-JSON-DATA</span></div>
+                            <div><span class="text-terminal-text">           </span><span class="syntax-keyword">CALL</span><span class="text-terminal-text"> </span><span class="syntax-string">'JSON-PARSE'</span><span class="text-terminal-text"> </span><span class="syntax-keyword">USING</span><span class="text-terminal-text"> WS-JSON-DATA</span></div>
+                            <div><span class="text-terminal-text">                                  </span><span class="syntax-keyword">GIVING</span><span class="text-terminal-text"> WS-RESPONSE.</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <p class="text-white/80 mb-6">
+                        Learn modern COBOL techniques including JSON processing, web services, and cloud integration
                     </p>
-                    <a href="{{ path('app_register') }}" class="btn btn-light btn-lg px-5">
-                        <i class="bi bi-person-plus"></i> Create Your Account
+                    <a href="{{ path('app_articles') }}" class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white rounded-lg font-semibold hover:from-cobol-blue hover:to-cobol-cyan transition-all duration-200 group">
+                        <i class="fas fa-code mr-2"></i>
+                        Explore Code Examples
+                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    {% if not app.user %}
+    <section class="py-20 bg-gradient-to-r from-cobol-blue via-cobol-cyan to-cobol-green">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+                Ready to Master COBOL?
+            </h2>
+            <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+                Join thousands of developers who are advancing their careers with modern COBOL skills.
+                Start your journey today with our comprehensive learning platform.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ path('app_register') }}" class="bg-white text-cobol-navy px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/90 transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-2xl">
+                    <i class="fas fa-rocket mr-2"></i>Start Learning Free
+                </a>
+                <a href="{{ path('app_pricing') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-cobol-navy transition-all duration-200 transform hover:scale-105">
+                    <i class="fas fa-eye mr-2"></i>View Pricing Plans
+                </a>
             </div>
         </div>
     </section>

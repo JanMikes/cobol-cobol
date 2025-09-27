@@ -1,46 +1,138 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard - COBOLCOBOL{% endblock %}
+{% block title %}Dashboard - Čo bol COBOL?{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-lg-8">
-            <h1><i class="bi bi-speedometer2"></i> Dashboard</h1>
-            <p class="text-muted">Welcome back, {{ user.firstName }}!</p>
+<!-- Dashboard Header -->
+<div class="bg-gradient-to-r from-cobol-navy to-cobol-blue py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-white flex items-center">
+                    <i class="fas fa-tachometer-alt mr-3 text-cobol-cyan"></i>
+                    Dashboard
+                </h1>
+                <p class="text-white/80 text-lg mt-2">Welcome back, {{ user.firstName }}!</p>
+            </div>
+            <div class="hidden md:block">
+                <div class="text-right">
+                    <div class="text-white/60 text-sm">Last login</div>
+                    <div class="text-white font-semibold">{{ 'now'|date('M j, Y g:i A') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Status Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Subscription Status -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Subscription</p>
+                            {% if active_subscription %}
+                                <p class="text-2xl font-bold text-cobol-green">Active</p>
+                                <p class="text-gray-500 text-xs">{{ active_subscription.plan.name }}</p>
+                            {% else %}
+                                <p class="text-2xl font-bold text-gray-400">Inactive</p>
+                                <p class="text-gray-500 text-xs">No plan</p>
+                            {% endif %}
+                        </div>
+                        <div class="w-12 h-12 {% if active_subscription %}bg-cobol-green{% else %}bg-gray-400{% endif %} rounded-lg flex items-center justify-center">
+                            <i class="fas {% if active_subscription %}fa-crown{% else %}fa-times{% endif %} text-white text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member Since -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Member Since</p>
+                            <p class="text-2xl font-bold text-cobol-blue">{{ user.createdAt|date('M Y') }}</p>
+                            <p class="text-gray-500 text-xs">{{ user.createdAt|date('M j, Y') }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-cobol-blue rounded-lg flex items-center justify-center">
+                            <i class="fas fa-calendar text-white text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Status -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Account Status</p>
+                            <p class="text-2xl font-bold text-cobol-green">Verified</p>
+                            <p class="text-gray-500 text-xs">Email confirmed</p>
+                        </div>
+                        <div class="w-12 h-12 bg-cobol-green rounded-lg flex items-center justify-center">
+                            <i class="fas fa-shield-check text-white text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Account Overview -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-person-circle"></i> Account Overview</h5>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                        <i class="fas fa-user-circle mr-3 text-cobol-cyan"></i>
+                        Account Overview
+                    </h2>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
-                            <p><strong>Email:</strong> {{ user.email }}</p>
-                            <p><strong>Member since:</strong> {{ user.createdAt|date('F j, Y') }}</p>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <span class="text-gray-600 font-medium w-24">Name:</span>
+                                <span class="text-gray-900">{{ user.firstName }} {{ user.lastName }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-gray-600 font-medium w-24">Email:</span>
+                                <span class="text-gray-900">{{ user.email }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-gray-600 font-medium w-24">Joined:</span>
+                                <span class="text-gray-900">{{ user.createdAt|date('F j, Y') }}</span>
+                            </div>
                         </div>
-                        <div class="col-md-6">
+                        <div>
                             {% if active_subscription %}
-                                <div class="subscription-status">
-                                    <span class="badge bg-success fs-6">
-                                        <i class="bi bi-check-circle"></i> Active Subscriber
-                                    </span>
-                                    <p class="mt-2 mb-0">
-                                        <strong>Plan:</strong> {{ active_subscription.plan.name }}<br>
-                                        <strong>Status:</strong> {{ active_subscription.status|title }}<br>
+                                <div class="space-y-3">
+                                    <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-cobol-green to-cobol-cyan text-white rounded-full text-sm font-semibold">
+                                        <i class="fas fa-check-circle mr-2"></i>
+                                        Active Subscriber
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center text-sm">
+                                            <span class="text-gray-600 font-medium w-20">Plan:</span>
+                                            <span class="text-gray-900">{{ active_subscription.plan.name }}</span>
+                                        </div>
+                                        <div class="flex items-center text-sm">
+                                            <span class="text-gray-600 font-medium w-20">Status:</span>
+                                            <span class="text-gray-900">{{ active_subscription.status|title }}</span>
+                                        </div>
                                         {% if active_subscription.currentPeriodEnd %}
-                                        <strong>Next billing:</strong> {{ active_subscription.currentPeriodEnd|date('F j, Y') }}
+                                        <div class="flex items-center text-sm">
+                                            <span class="text-gray-600 font-medium w-20">Next bill:</span>
+                                            <span class="text-gray-900">{{ active_subscription.currentPeriodEnd|date('M j, Y') }}</span>
+                                        </div>
                                         {% endif %}
-                                    </p>
+                                    </div>
                                 </div>
                             {% else %}
-                                <div class="subscription-status">
-                                    <span class="badge bg-secondary fs-6">
-                                        <i class="bi bi-x-circle"></i> No Active Subscription
-                                    </span>
-                                    <p class="mt-2 mb-0">Upgrade to premium to access exclusive content.</p>
+                                <div class="space-y-3">
+                                    <div class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-times-circle mr-2"></i>
+                                        No Active Subscription
+                                    </div>
+                                    <p class="text-gray-600 text-sm">Upgrade to premium to access exclusive COBOL content and advanced tutorials.</p>
                                 </div>
                             {% endif %}
                         </div>
@@ -49,86 +141,137 @@
             </div>
 
             <!-- Quick Actions -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h5>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                        <i class="fas fa-bolt mr-3 text-cobol-amber"></i>
+                        Quick Actions
+                    </h2>
                 </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <a href="{{ path('app_articles') }}" class="btn btn-outline-primary w-100">
-                                <i class="bi bi-journal-text"></i> Browse Articles
-                            </a>
-                        </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="{{ path('app_articles') }}" class="group bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white p-4 rounded-lg hover:from-cobol-blue hover:to-cobol-cyan transition-all duration-200 transform hover:scale-105 shadow-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-newspaper text-xl mr-3"></i>
+                                <div>
+                                    <div class="font-semibold">Browse Articles</div>
+                                    <div class="text-white/80 text-sm">Explore COBOL tutorials</div>
+                                </div>
+                            </div>
+                        </a>
+
                         {% if active_subscription %}
-                        <div class="col-md-6">
-                            <a href="{{ path('app_premium') }}" class="btn btn-outline-warning w-100">
-                                <i class="bi bi-star-fill"></i> Premium Content
-                            </a>
-                        </div>
+                        <a href="{{ path('app_premium') }}" class="group bg-gradient-to-r from-cobol-amber to-cobol-green text-white p-4 rounded-lg hover:from-cobol-green hover:to-cobol-amber transition-all duration-200 transform hover:scale-105 shadow-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-crown text-xl mr-3"></i>
+                                <div>
+                                    <div class="font-semibold">Premium Content</div>
+                                    <div class="text-white/80 text-sm">Access exclusive tutorials</div>
+                                </div>
+                            </div>
+                        </a>
                         {% else %}
-                        <div class="col-md-6">
-                            <a href="{{ path('app_pricing') }}" class="btn btn-outline-success w-100">
-                                <i class="bi bi-credit-card"></i> View Pricing
-                            </a>
-                        </div>
+                        <a href="{{ path('app_pricing') }}" class="group bg-gradient-to-r from-cobol-green to-cobol-cyan text-white p-4 rounded-lg hover:from-cobol-cyan hover:to-cobol-green transition-all duration-200 transform hover:scale-105 shadow-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-credit-card text-xl mr-3"></i>
+                                <div>
+                                    <div class="font-semibold">View Pricing</div>
+                                    <div class="text-white/80 text-sm">Upgrade your account</div>
+                                </div>
+                            </div>
+                        </a>
                         {% endif %}
                     </div>
                 </div>
             </div>
 
             <!-- Recent Activity -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Activity</h5>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                        <i class="fas fa-history mr-3 text-cobol-green"></i>
+                        Recent Activity
+                    </h2>
                 </div>
-                <div class="card-body">
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <i class="bi bi-person-plus text-success"></i>
-                            <span>Account created on {{ user.createdAt|date('F j, Y g:i A') }}</span>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-cobol-green rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-user-plus text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-900 font-medium">Account created</p>
+                                <p class="text-gray-600 text-sm">{{ user.createdAt|date('F j, Y g:i A') }}</p>
+                            </div>
                         </div>
+
                         {% if active_subscription %}
-                        <div class="timeline-item">
-                            <i class="bi bi-credit-card text-primary"></i>
-                            <span>Subscribed to {{ active_subscription.plan.name }} plan</span>
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-cobol-blue rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-credit-card text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-900 font-medium">Subscribed to {{ active_subscription.plan.name }}</p>
+                                <p class="text-gray-600 text-sm">Premium access activated</p>
+                            </div>
                         </div>
                         {% endif %}
+
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-cobol-cyan rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-sign-in-alt text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-900 font-medium">Last login</p>
+                                <p class="text-gray-600 text-sm">{{ 'now'|date('F j, Y g:i A') }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <!-- Sidebar -->
+        <div class="lg:col-span-1 space-y-8">
             <!-- Subscription Management -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-credit-card"></i> Subscription</h5>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                        <i class="fas fa-credit-card mr-3 text-cobol-blue"></i>
+                        Subscription
+                    </h2>
                 </div>
-                <div class="card-body">
+                <div class="p-6">
                     {% if active_subscription %}
-                        <div class="text-center mb-3">
-                            <div class="premium-badge d-inline-block">
-                                <i class="bi bi-star-fill"></i> {{ active_subscription.plan.name }}
+                        <div class="text-center space-y-4">
+                            <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-cobol-amber to-cobol-green text-white rounded-full font-semibold">
+                                <i class="fas fa-crown mr-2"></i>
+                                {{ active_subscription.plan.name }}
                             </div>
+
+                            {% if user.stripeCustomerId %}
+                            <a href="{{ path('app_manage_subscription') }}" class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-cobol-cyan to-cobol-blue text-white rounded-lg font-semibold hover:from-cobol-blue hover:to-cobol-cyan transition-all duration-200 transform hover:scale-105">
+                                <i class="fas fa-cog mr-2"></i>
+                                Manage Subscription
+                            </a>
+                            {% endif %}
+
+                            <p class="text-gray-600 text-sm">
+                                Manage billing, payment methods, and subscription settings
+                            </p>
                         </div>
-
-                        {% if user.stripeCustomerId %}
-                        <a href="{{ path('app_manage_subscription') }}" class="btn btn-primary w-100 mb-2">
-                            <i class="bi bi-gear"></i> Manage Subscription
-                        </a>
-                        {% endif %}
-
-                        <small class="text-muted d-block text-center">
-                            Manage billing, payment methods, and more
-                        </small>
                     {% else %}
-                        <div class="text-center">
-                            <i class="bi bi-star text-muted" style="font-size: 3rem;"></i>
-                            <h6 class="mt-2">No Active Subscription</h6>
-                            <p class="text-muted small">Upgrade to access premium content and features</p>
-                            <a href="{{ path('app_pricing') }}" class="btn btn-success w-100">
-                                <i class="bi bi-arrow-up"></i> Upgrade Now
+                        <div class="text-center space-y-4">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                                <i class="fas fa-star text-gray-400 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">No Active Subscription</h3>
+                                <p class="text-gray-600 text-sm">Upgrade to access premium COBOL content and advanced features</p>
+                            </div>
+                            <a href="{{ path('app_pricing') }}" class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-cobol-green to-cobol-cyan text-white rounded-lg font-semibold hover:from-cobol-cyan hover:to-cobol-green transition-all duration-200 transform hover:scale-105">
+                                <i class="fas fa-arrow-up mr-2"></i>
+                                Upgrade Now
                             </a>
                         </div>
                     {% endif %}
@@ -136,58 +279,76 @@
             </div>
 
             <!-- Help & Support -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-question-circle"></i> Help & Support</h5>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                        <i class="fas fa-life-ring mr-3 text-cobol-red"></i>
+                        Help & Support
+                    </h2>
                 </div>
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <a href="#" class="text-decoration-none">
-                                <i class="bi bi-book"></i> Knowledge Base
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-decoration-none">
-                                <i class="bi bi-envelope"></i> Contact Support
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-decoration-none">
-                                <i class="bi bi-shield-check"></i> Privacy Policy
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-decoration-none">
-                                <i class="bi bi-file-text"></i> Terms of Service
-                            </a>
-                        </li>
-                    </ul>
+                <div class="p-6">
+                    <div class="space-y-3">
+                        <a href="#" class="flex items-center text-gray-700 hover:text-cobol-cyan transition-colors group">
+                            <i class="fas fa-book mr-3 text-cobol-cyan group-hover:text-cobol-blue"></i>
+                            <span>Knowledge Base</span>
+                        </a>
+                        <a href="#" class="flex items-center text-gray-700 hover:text-cobol-cyan transition-colors group">
+                            <i class="fas fa-envelope mr-3 text-cobol-cyan group-hover:text-cobol-blue"></i>
+                            <span>Contact Support</span>
+                        </a>
+                        <a href="#" class="flex items-center text-gray-700 hover:text-cobol-cyan transition-colors group">
+                            <i class="fas fa-shield-check mr-3 text-cobol-cyan group-hover:text-cobol-blue"></i>
+                            <span>Privacy Policy</span>
+                        </a>
+                        <a href="#" class="flex items-center text-gray-700 hover:text-cobol-cyan transition-colors group">
+                            <i class="fas fa-file-text mr-3 text-cobol-cyan group-hover:text-cobol-blue"></i>
+                            <span>Terms of Service</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Progress -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                        <i class="fas fa-chart-line mr-3 text-cobol-amber"></i>
+                        Learning Progress
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-gray-700">COBOL Basics</span>
+                                <span class="text-sm text-gray-600">75%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-cobol-cyan to-cobol-blue h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-gray-700">Enterprise Integration</span>
+                                <span class="text-sm text-gray-600">45%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-cobol-green to-cobol-cyan h-2 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-gray-700">Performance Optimization</span>
+                                <span class="text-sm text-gray-600">20%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-cobol-amber to-cobol-green h-2 rounded-full" style="width: 20%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-.timeline-item {
-    padding: 10px 0;
-    border-left: 2px solid #e9ecef;
-    padding-left: 20px;
-    margin-left: 10px;
-    position: relative;
-}
-
-.timeline-item i {
-    position: absolute;
-    left: -11px;
-    background: white;
-    padding: 4px;
-    border-radius: 50%;
-}
-
-.subscription-status .badge {
-    font-size: 0.9rem;
-}
-</style>
 {% endblock %}
