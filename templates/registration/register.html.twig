@@ -25,10 +25,15 @@
                     {{ form_label(registrationForm.firstName, 'Krstné meno', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
                     <div class="relative">
                         <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
-                        {{ form_widget(registrationForm.firstName, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': 'Vaše krstné meno'}}) }}
+                        {{ form_widget(registrationForm.firstName, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border ' ~ (form_errors(registrationForm.firstName) ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-cobol-cyan') ~ ' rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200', 'placeholder': 'Vaše krstné meno'}}) }}
                     </div>
                     <div class="mt-1">
-                        {{ form_errors(registrationForm.firstName) }}
+                        {% if form_errors(registrationForm.firstName) %}
+                            <div class="text-red-600 text-sm flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                {{ form_errors(registrationForm.firstName) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -37,10 +42,15 @@
                     {{ form_label(registrationForm.lastName, 'Priezvisko', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
                     <div class="relative">
                         <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
-                        {{ form_widget(registrationForm.lastName, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': 'Vaše priezvisko'}}) }}
+                        {{ form_widget(registrationForm.lastName, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border ' ~ (form_errors(registrationForm.lastName) ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-cobol-cyan') ~ ' rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200', 'placeholder': 'Vaše priezvisko'}}) }}
                     </div>
                     <div class="mt-1">
-                        {{ form_errors(registrationForm.lastName) }}
+                        {% if form_errors(registrationForm.lastName) %}
+                            <div class="text-red-600 text-sm flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                {{ form_errors(registrationForm.lastName) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -49,10 +59,15 @@
                     {{ form_label(registrationForm.email, 'Email adresa', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
                     <div class="relative">
                         <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
-                        {{ form_widget(registrationForm.email, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': 'vas@email.com'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border ' ~ (form_errors(registrationForm.email) ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-cobol-cyan') ~ ' rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200', 'placeholder': 'vas@email.com'}}) }}
                     </div>
                     <div class="mt-1">
-                        {{ form_errors(registrationForm.email) }}
+                        {% if form_errors(registrationForm.email) %}
+                            <div class="text-red-600 text-sm flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -61,10 +76,15 @@
                     {{ form_label(registrationForm.plainPassword.first, 'Heslo', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
                     <div class="relative">
                         <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
-                        {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': '••••••••'}}) }}
+                        {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border ' ~ (form_errors(registrationForm.plainPassword.first) ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-cobol-cyan') ~ ' rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200', 'placeholder': '••••••••'}}) }}
                     </div>
                     <div class="mt-1">
-                        {{ form_errors(registrationForm.plainPassword.first) }}
+                        {% if form_errors(registrationForm.plainPassword.first) %}
+                            <div class="text-red-600 text-sm flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                {{ form_errors(registrationForm.plainPassword.first) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -73,10 +93,15 @@
                     {{ form_label(registrationForm.plainPassword.second, 'Potvrdiť heslo', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
                     <div class="relative">
                         <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-cobol-cyan"></i>
-                        {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cobol-cyan focus:border-transparent transition-all duration-200', 'placeholder': '••••••••'}}) }}
+                        {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'w-full pl-10 pr-4 py-3 border ' ~ (form_errors(registrationForm.plainPassword.second) ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-cobol-cyan') ~ ' rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200', 'placeholder': '••••••••'}}) }}
                     </div>
                     <div class="mt-1">
-                        {{ form_errors(registrationForm.plainPassword.second) }}
+                        {% if form_errors(registrationForm.plainPassword.second) %}
+                            <div class="text-red-600 text-sm flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                {{ form_errors(registrationForm.plainPassword.second) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -89,7 +114,12 @@
                         </span>
                     </label>
                     <div class="mt-1">
-                        {{ form_errors(registrationForm.agreeTerms) }}
+                        {% if form_errors(registrationForm.agreeTerms) %}
+                            <div class="text-red-600 text-sm flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
