@@ -38,6 +38,8 @@ jobs:
 
       -   run: bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
+      -   run: bin/console doctrine:fixtures:load --no-interaction
+
       -   run: vendor/bin/phpunit
 
 

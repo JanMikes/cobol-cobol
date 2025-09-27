@@ -31,6 +31,9 @@ class SubscriberAccessTest extends BaseTestCase
 
             $entityManager->persist($subscription);
             $entityManager->flush();
+
+            // Refresh the user entity to ensure the subscription is loaded
+            $entityManager->refresh($user);
         }
     }
 
