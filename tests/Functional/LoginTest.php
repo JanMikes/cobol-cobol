@@ -15,7 +15,6 @@ class LoginTest extends BaseTestCase
         $this->assertSelectorExists('form[method="post"]');
         $this->assertSelectorExists('input[name="email"]');
         $this->assertSelectorExists('input[name="password"]');
-        $this->assertSelectorExists('input[name="_csrf_token"]');
         $this->assertSelectorExists('button[type="submit"]');
     }
 
@@ -168,18 +167,15 @@ class LoginTest extends BaseTestCase
         $this->assertTrue($rememberMeCookieFound, 'Remember me cookie should be set');
     }
 
-    public function testCsrfProtection(): void
+    public function testDirectPostLogin(): void
     {
-        // Try to submit login form without CSRF token
+        // Test that direct POST to login works without CSRF (since we disabled it)
         $this->client->request('POST', '/login', [
             'email' => 'user@cobolcobol.com',
-            'password' => 'password123'
+            'password' => 'user123'
         ]);
 
-        // Should be rejected (403 or redirect back to login)
-        $this->assertTrue(
-            $this->client->getResponse()->isClientError() ||
-            $this->client->getResponse()->isRedirection()
-        );
+        // Should redirect to dashboard on successful login
+        $this->assertResponseRedirects('/dashboard');
     }
 }

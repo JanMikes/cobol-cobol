@@ -3,3 +3,5 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
         cookie_httponly: true
+        # Use a more specific cookie name to avoid conflicts
+        name: COBOLSESSID

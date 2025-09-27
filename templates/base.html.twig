@@ -545,20 +545,10 @@
                 menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
             });
 
-            // Configure Turbo to allow redirects for authentication forms
+            // Configure Turbo for HTTPS
             document.addEventListener('turbo:before-fetch-request', function(event) {
+                // Ensure credentials are included for same-origin requests
                 event.detail.fetchOptions.credentials = 'same-origin';
-            });
-
-            // Handle authentication errors more gracefully
-            document.addEventListener('turbo:fetch-request-error', function(event) {
-                console.warn('Turbo fetch failed, falling back to standard form submission');
-                // Let the browser handle the form submission normally
-                event.preventDefault();
-                if (event.target.closest('form')) {
-                    event.target.closest('form').setAttribute('data-turbo', 'false');
-                    event.target.closest('form').submit();
-                }
             });
         </script>
         {% block extra_javascripts %}{% endblock %}
