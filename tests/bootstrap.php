@@ -20,7 +20,7 @@ if (isset($_ENV['BOOTSTRAP_LOAD_FIXTURES']) && $_ENV['BOOTSTRAP_LOAD_FIXTURES'])
 
     // Get doctrine and fixture loader
     $entityManager = $container->get('doctrine.orm.entity_manager');
-    $fixtureLoader = $container->get('doctrine.fixtures.loader');
+    $fixtureLoader = new \Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader($container);
 
     // Load fixtures
     $fixtures = $fixtureLoader->getFixtures();

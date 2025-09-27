@@ -4,11 +4,12 @@ namespace App\Tests\Functional;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class BaseTestCase extends WebTestCase
 {
-    protected $client;
+    protected KernelBrowser $client;
     protected UserRepository $userRepository;
 
     protected function setUp(): void
