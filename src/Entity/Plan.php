@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\PlanRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlanRepository::class)]
@@ -19,32 +18,38 @@ class Plan
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $price = null;
+    #[ORM\Column]
+    private ?int $priceMonthly = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $stripePriceId = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $priceYearly = null;
 
     #[ORM\Column(length: 255)]
     private ?string $stripeProductId = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $interval = null;
+    #[ORM\Column(length: 255)]
+    private ?string $stripePriceMonthlyId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripePriceYearlyId = null;
 
     #[ORM\Column]
-    private ?bool $isActive = null;
+    private bool $isActive = true;
 
     #[ORM\Column]
-    private ?int $sortOrder = null;
+    private int $sortOrder = 0;
 
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(type: 'json')]
     private array $features = [];
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column]
+    private \DateTimeImmutable $createdAt;
+
+    #[ORM\Column]
+    private \DateTimeImmutable $updatedAt;
 
     /**
      * @var Collection<int, Subscription>
@@ -56,8 +61,7 @@ class Plan
     {
         $this->subscriptions = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
-        $this->isActive = true;
-        $this->sortOrder = 0;
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -73,6 +77,7 @@ class Plan
     public function setName(string $name): static
     {
         $this->name = $name;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -85,32 +90,59 @@ class Plan
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPriceMonthly(): ?int
     {
-        return $this->price;
+        return $this->priceMonthly;
     }
 
-    public function setPrice(string $price): static
+    public function setPriceMonthly(int $priceMonthly): static
     {
-        $this->price = $price;
+        $this->priceMonthly = $priceMonthly;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function getStripePriceId(): ?string
+    public function getPriceYearly(): ?int
     {
-        return $this->stripePriceId;
+        return $this->priceYearly;
     }
 
-    public function setStripePriceId(string $stripePriceId): static
+    public function setPriceYearly(?int $priceYearly): static
     {
-        $this->stripePriceId = $stripePriceId;
+        $this->priceYearly = $priceYearly;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
+    }
+
+    public function getFormattedPriceMonthly(): string
+    {
+        return '$' . number_format($this->priceMonthly / 100, 2);
+    }
+
+    public function getFormattedPriceYearly(): string
+    {
+        if ($this->priceYearly === null) {
+            return '';
+        }
+
+        return '$' . number_format($this->priceYearly / 100, 2);
+    }
+
+    public function getYearlyDiscount(): ?int
+    {
+        if ($this->priceYearly === null) {
+            return null;
+        }
+
+        $monthlyYearlyPrice = $this->priceMonthly * 12;
+        return (int) round((($monthlyYearlyPrice - $this->priceYearly) / $monthlyYearlyPrice) * 100);
     }
 
     public function getStripeProductId(): ?string
@@ -121,35 +153,51 @@ class Plan
     public function setStripeProductId(string $stripeProductId): static
     {
         $this->stripeProductId = $stripeProductId;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function getInterval(): ?string
+    public function getStripePriceMonthlyId(): ?string
     {
-        return $this->interval;
+        return $this->stripePriceMonthlyId;
     }
 
-    public function setInterval(string $interval): static
+    public function setStripePriceMonthlyId(string $stripePriceMonthlyId): static
     {
-        $this->interval = $interval;
+        $this->stripePriceMonthlyId = $stripePriceMonthlyId;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function isActive(): ?bool
+    public function getStripePriceYearlyId(): ?string
+    {
+        return $this->stripePriceYearlyId;
+    }
+
+    public function setStripePriceYearlyId(?string $stripePriceYearlyId): static
+    {
+        $this->stripePriceYearlyId = $stripePriceYearlyId;
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function isActive(): bool
     {
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): static
+    public function setActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function getSortOrder(): ?int
+    public function getSortOrder(): int
     {
         return $this->sortOrder;
     }
@@ -157,6 +205,7 @@ class Plan
     public function setSortOrder(int $sortOrder): static
     {
         $this->sortOrder = $sortOrder;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -169,20 +218,19 @@ class Plan
     public function setFeatures(array $features): static
     {
         $this->features = $features;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function getUpdatedAt(): \DateTimeImmutable
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
+        return $this->updatedAt;
     }
 
     /**
@@ -206,28 +254,11 @@ class Plan
     public function removeSubscription(Subscription $subscription): static
     {
         if ($this->subscriptions->removeElement($subscription)) {
-            // set the owning side to null (unless already changed)
             if ($subscription->getPlan() === $this) {
                 $subscription->setPlan(null);
             }
         }
 
         return $this;
-    }
-
-    public function getFormattedPrice(): string
-    {
-        return '$' . number_format((float) $this->price, 2);
-    }
-
-    public function getIntervalLabel(): string
-    {
-        return match ($this->interval) {
-            'month' => 'Monthly',
-            'year' => 'Yearly',
-            'week' => 'Weekly',
-            'day' => 'Daily',
-            default => ucfirst($this->interval),
-        };
     }
 }

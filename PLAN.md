@@ -89,9 +89,11 @@ Create a demonstration SaaS application that showcases subscription-based conten
    - Plan entity for subscription tiers
    - Article entity for content management
 
-### Phase 3: Stripe Integration
+### Phase 3: Stripe Integration ✅
 5. **Implement Stripe subscription management**
-   - Initialize Stripe SDK
+   - ✅ Initialize Stripe SDK (demo keys configured)
+   - ✅ Set up demo products and prices via API scripts
+   - ✅ Create webhook endpoint configuration script
    - Create checkout sessions
    - Implement webhook handlers
    - Set up customer portal integration
@@ -159,7 +161,11 @@ cobol-cobol/
 │       └── php.ini           # PHP configuration
 │
 ├── bin/
-│   └── console               # Symfony CLI
+│   ├── console               # Symfony CLI
+│   ├── stripe-setup-products.sh        # Create Stripe products and prices
+│   ├── stripe-setup-webhook.sh         # Configure Stripe webhook endpoint
+│   ├── stripe-list-products.sh         # List all Stripe products and prices
+│   └── stripe-create-test-customer.sh  # Create test customers and subscriptions
 ├── config/
 │   ├── packages/             # Bundle configurations
 │   ├── routes/               # Routing configuration
@@ -205,11 +211,13 @@ cobol-cobol/
 6. Push to feature branch
 
 ### Testing Payment Flows
-1. Use Stripe test mode
-2. Use test card numbers
-3. Verify webhook handling
-4. Check email notifications in Mailpit
-5. Test subscription lifecycle
+1. Use Stripe test mode with demo keys
+2. Run `./bin/stripe-setup-products.sh` to create products
+3. Run `./bin/stripe-setup-webhook.sh` to configure webhook
+4. Use test card numbers (4242 4242 4242 4242)
+5. Verify webhook handling
+6. Check email notifications in Mailpit
+7. Test subscription lifecycle with test customers
 
 ## Security Considerations
 - Never commit `.env` file

@@ -1,6 +1,8 @@
 services:
   web:
     image: ghcr.io/thedevs-cz/php:8.4
+    restart: unless-stopped
+    tty: true
     ports:
       - "8080:80"
     volumes:
@@ -11,14 +13,17 @@ services:
     depends_on:
       - postgres
     environment:
-      - DATABASE_URL=postgresql://cobolcobol:password@postgres:5432/cobolcobol?serverVersion=16&charset=utf8
-      - APP_ENV=dev
-      - APP_SECRET=change_me_in_production
-      - STRIPE_PUBLIC_KEY=pk_test_your_key_here
-      - STRIPE_SECRET_KEY=sk_test_your_key_here
-      - STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
-      - MAILER_DSN=smtp://mailpit:1025
-      - SERVER_NAME=:80
+      DATABASE_URL: "postgresql://cobolcobol:password@postgres:5432/cobolcobol?serverVersion=16&charset=utf8"
+      APP_ENV: "dev"
+      APP_SECRET: "change_me_in_production"
+      STRIPE_PUBLIC_KEY: "pk_test_51SBvaQABz6lYP2dKA3zDbCtYfDC4cqdP8q7hYM5vPkfHTPcoY7CfcTjsFiH7YSMAIZgJd2exTpxY5e0mqgQSZtIv004Jyho6q7"
+      STRIPE_SECRET_KEY: "sk_test_51SBvaQABz6lYP2dKRYyo5NS0n7N23cPHTYdMemGCj7A6RAJeStQoCa4WhCs4DN8y6gxXnX1bGKy0SEA2NDOK46HA00G8QYrJth"
+      STRIPE_WEBHOOK_SECRET: "whsec_your_webhook_secret_here"
+      MAILER_DSN: "smtp://mailpit:1025"
+      XDEBUG_CONFIG: "client_host=host.docker.internal"
+      XDEBUG_MODE: debug
+      PHP_IDE_CONFIG: "serverName=localhost"
+      SERVER_NAME: :80
     networks:
       - cobolcobol
 

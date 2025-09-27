@@ -19,31 +19,27 @@ class PlanRepository extends ServiceEntityRepository
     /**
      * @return Plan[]
      */
-    public function findActiveOrderedBySortOrder(): array
+    public function findActivePlans(): array
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.isActive = :isActive')
+            ->where('p.isActive = :isActive')
             ->setParameter('isActive', true)
             ->orderBy('p.sortOrder', 'ASC')
-            ->addOrderBy('p.price', 'ASC')
+            ->addOrderBy('p.priceMonthly', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
-    public function findOneByStripePriceId(string $stripePriceId): ?Plan
+    public function findByStripeProductId(string $stripeProductId): ?Plan
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.stripePriceId = :stripePriceId')
-            ->setParameter('stripePriceId', $stripePriceId)
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $this->findOneBy(['stripeProductId' => $stripeProductId]);
     }
 
-    public function findOneByStripeProductId(string $stripeProductId): ?Plan
+    public function findByStripePriceId(string $stripePriceId): ?Plan
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.stripeProductId = :stripeProductId')
-            ->setParameter('stripeProductId', $stripeProductId)
+            ->where('p.stripePriceMonthlyId = :priceId OR p.stripePriceYearlyId = :priceId')
+            ->setParameter('priceId', $stripePriceId)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -51,15 +47,25 @@ class PlanRepository extends ServiceEntityRepository
     /**
      * @return Plan[]
      */
-    public function findByInterval(string $interval): array
+    public function findForPricingPage(): array
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.interval = :interval')
-            ->andWhere('p.isActive = :isActive')
-            ->setParameter('interval', $interval)
+            ->where('p.isActive = :isActive')
             ->setParameter('isActive', true)
             ->orderBy('p.sortOrder', 'ASC')
+            ->addOrderBy('p.priceMonthly', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findCheapestPlan(): ?Plan
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.isActive = :isActive')
+            ->setParameter('isActive', true)
+            ->orderBy('p.priceMonthly', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

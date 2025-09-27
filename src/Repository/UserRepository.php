@@ -19,13 +19,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
         $user->setPassword($newHashedPassword);
@@ -33,39 +30,38 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * @return User[] Returns an array of User objects
-     */
-    public function findByRole(string $role): array
+    public function findByEmail(string $email): ?User
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.roles LIKE :role')
-            ->setParameter('role', '%"' . $role . '"%')
-            ->orderBy('u.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult();
+        return $this->findOneBy(['email' => $email]);
+    }
+
+    public function findByStripeCustomerId(string $stripeCustomerId): ?User
+    {
+        return $this->findOneBy(['stripeCustomerId' => $stripeCustomerId]);
     }
 
     /**
-     * @return User[] Returns users with active subscriptions
+     * @return User[]
      */
-    public function findWithActiveSubscriptions(): array
+    public function findSubscribers(): array
     {
         return $this->createQueryBuilder('u')
             ->innerJoin('u.subscriptions', 's')
-            ->andWhere('s.status IN (:statuses)')
-            ->setParameter('statuses', ['active', 'trialing'])
-            ->orderBy('u.createdAt', 'DESC')
+            ->where('s.status IN (:activeStatuses)')
+            ->setParameter('activeStatuses', ['active', 'trialing'])
             ->getQuery()
             ->getResult();
     }
 
-    public function findOneByEmail(string $email): ?User
+    /**
+     * @return User[]
+     */
+    public function findRecentUsers(int $limit = 10): array
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.email = :email')
-            ->setParameter('email', $email)
+            ->orderBy('u.createdAt', 'DESC')
+            ->setMaxResults($limit)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 }

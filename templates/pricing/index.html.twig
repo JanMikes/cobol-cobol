@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pricing - COBOLCOBOL{% endblock %}
+
+{% block body %}
+<div class="container">
+    <!-- Header -->
+    <div class="row text-center mt-5 mb-5">
+        <div class="col-lg-12">
+            <h1 class="display-4 fw-bold">Simple, Transparent Pricing</h1>
+            <p class="lead text-muted">Choose the plan that works best for you</p>
+        </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="row justify-content-center g-4">
+        {% for plan in plans %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card pricing-card h-100 {% if loop.index == 2 %}featured{% endif %}">
+                {% if loop.index == 2 %}
+                <div class="badge bg-primary position-absolute top-0 start-50 translate-middle px-3 py-2">
+                    Most Popular
+                </div>
+                {% endif %}
+
+                <div class="card-body text-center p-4">
+                    <h4 class="card-title fw-bold">{{ plan.name }}</h4>
+                    <p class="text-muted mb-4">{{ plan.description }}</p>
+
+                    <!-- Monthly Price -->
+                    <div class="mb-4">
+                        <span class="display-4 fw-bold">{{ plan.formattedPriceMonthly }}</span>
+                        <small class="text-muted">/month</small>
+                    </div>
+
+                    <!-- Yearly Price (if available) -->
+                    {% if plan.priceYearly %}
+                    <div class="mb-4">
+                        <div class="alert alert-success">
+                            <strong>Save {{ plan.yearlyDiscount }}%</strong> with yearly billing<br>
+                            <span class="h5">{{ plan.formattedPriceYearly }}/year</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Features -->
+                    {% if plan.features %}
+                    <ul class="list-unstyled mb-4">
+                        {% for feature in plan.features %}
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            {{ feature }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    {% if not app.user %}
+                        <div class="d-grid gap-2">
+                            <a href="{{ path('app_register') }}" class="btn {% if loop.index == 2 %}btn-primary{% else %}btn-outline-primary{% endif %} btn-lg">
+                                Get Started
+                            </a>
+                        </div>
+                    {% elseif is_granted('ROLE_SUBSCRIBER') %}
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg" disabled>
+                                <i class="bi bi-check-circle"></i> Current Plan
+                            </button>
+                        </div>
+                    {% else %}
+                        <div class="d-grid gap-2 mb-3">
+                            <a href="{{ path('app_subscribe', {id: plan.id}) }}" class="btn {% if loop.index == 2 %}btn-primary{% else %}btn-outline-primary{% endif %} btn-lg">
+                                Subscribe Monthly
+                            </a>
+                            {% if plan.priceYearly %}
+                            <a href="{{ path('app_subscribe', {id: plan.id, yearly: 'true'}) }}" class="btn btn-outline-success">
+                                Subscribe Yearly <small>(Save {{ plan.yearlyDiscount }}%)</small>
+                            </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="row mt-5">
+        <div class="col-lg-8 offset-lg-2">
+            <h3 class="text-center mb-4">Frequently Asked Questions</h3>
+
+            <div class="accordion" id="pricingFAQ">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Can I cancel my subscription anytime?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#pricingFAQ">
+                        <div class="accordion-body">
+                            Yes, you can cancel your subscription at any time. You'll continue to have access to premium content until the end of your current billing period.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Is there a free trial?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                        <div class="accordion-body">
+                            New subscribers get a 7-day free trial with full access to premium content. No credit card required to start your trial.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            What payment methods do you accept?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                        <div class="accordion-body">
+                            We accept all major credit cards (Visa, Mastercard, American Express) and PayPal. All payments are processed securely through Stripe.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            Can I change my plan later?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                        <div class="accordion-body">
+                            Yes, you can upgrade or downgrade your plan at any time from your account dashboard. Changes will be prorated and applied to your next billing cycle.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    {% if not app.user %}
+    <div class="row mt-5">
+        <div class="col-lg-8 offset-lg-2 text-center">
+            <div class="bg-light p-5 rounded">
+                <h3 class="fw-bold mb-3">Ready to get started?</h3>
+                <p class="text-muted mb-4">Join thousands of satisfied subscribers and start accessing premium content today.</p>
+                <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-person-plus"></i> Create Your Account
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="mb-5"></div>
+{% endblock %}

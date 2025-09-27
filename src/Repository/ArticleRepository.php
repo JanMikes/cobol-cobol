@@ -17,31 +17,37 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    public function findBySlug(string $slug): ?Article
+    {
+        return $this->findOneBy(['slug' => $slug, 'isPublished' => true]);
+    }
+
     /**
      * @return Article[]
      */
-    public function findPublishedOrderedByDate(bool $premiumOnly = false): array
+    public function findPublishedArticles(bool $premiumOnly = false): array
     {
         $qb = $this->createQueryBuilder('a')
-            ->andWhere('a.isPublished = :isPublished')
-            ->setParameter('isPublished', true)
-            ->orderBy('a.publishedAt', 'DESC');
+            ->where('a.isPublished = :isPublished')
+            ->setParameter('isPublished', true);
 
         if ($premiumOnly) {
             $qb->andWhere('a.isPremium = :isPremium')
                ->setParameter('isPremium', true);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->orderBy('a.publishedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
      * @return Article[]
      */
-    public function findPublicArticles(): array
+    public function findFreeArticles(): array
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.isPublished = :isPublished')
+            ->where('a.isPublished = :isPublished')
             ->andWhere('a.isPremium = :isPremium')
             ->setParameter('isPublished', true)
             ->setParameter('isPremium', false)
@@ -56,7 +62,7 @@ class ArticleRepository extends ServiceEntityRepository
     public function findPremiumArticles(): array
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.isPublished = :isPublished')
+            ->where('a.isPublished = :isPublished')
             ->andWhere('a.isPremium = :isPremium')
             ->setParameter('isPublished', true)
             ->setParameter('isPremium', true)
@@ -65,15 +71,24 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findOneBySlug(string $slug): ?Article
+    /**
+     * @return Article[]
+     */
+    public function findRecentArticles(int $limit = 5, bool $premiumOnly = false): array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.slug = :slug')
-            ->andWhere('a.isPublished = :isPublished')
-            ->setParameter('slug', $slug)
-            ->setParameter('isPublished', true)
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.isPublished = :isPublished')
+            ->setParameter('isPublished', true);
+
+        if ($premiumOnly) {
+            $qb->andWhere('a.isPremium = :isPremium')
+               ->setParameter('isPremium', true);
+        }
+
+        return $qb->orderBy('a.publishedAt', 'DESC')
+            ->setMaxResults($limit)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 
     /**
@@ -82,9 +97,11 @@ class ArticleRepository extends ServiceEntityRepository
     public function findByAuthor(User $author): array
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.author = :author')
+            ->where('a.author = :author')
+            ->andWhere('a.isPublished = :isPublished')
             ->setParameter('author', $author)
-            ->orderBy('a.createdAt', 'DESC')
+            ->setParameter('isPublished', true)
+            ->orderBy('a.publishedAt', 'DESC')
             ->getQuery()
             ->getResult();
     }
@@ -92,16 +109,67 @@ class ArticleRepository extends ServiceEntityRepository
     /**
      * @return Article[]
      */
-    public function findRecentPublic(int $limit = 5): array
+    public function findByTag(string $tag): array
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.isPublished = :isPublished')
-            ->andWhere('a.isPremium = :isPremium')
+            ->where('a.isPublished = :isPublished')
+            ->andWhere('JSON_CONTAINS(a.tags, :tag) = 1')
             ->setParameter('isPublished', true)
-            ->setParameter('isPremium', false)
+            ->setParameter('tag', json_encode($tag))
             ->orderBy('a.publishedAt', 'DESC')
-            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @return Article[]
+     */
+    public function search(string $query): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.isPublished = :isPublished')
+            ->andWhere('a.title LIKE :query OR a.content LIKE :query OR a.excerpt LIKE :query')
+            ->setParameter('isPublished', true)
+            ->setParameter('query', '%' . $query . '%')
+            ->orderBy('a.publishedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countPublishedArticles(bool $premiumOnly = false): int
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
+            ->where('a.isPublished = :isPublished')
+            ->setParameter('isPublished', true);
+
+        if ($premiumOnly) {
+            $qb->andWhere('a.isPremium = :isPremium')
+               ->setParameter('isPremium', true);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function findAllTags(): array
+    {
+        $result = $this->createQueryBuilder('a')
+            ->select('a.tags')
+            ->where('a.isPublished = :isPublished')
+            ->setParameter('isPublished', true)
+            ->getQuery()
+            ->getArrayResult();
+
+        $tags = [];
+        foreach ($result as $row) {
+            if (is_array($row['tags'])) {
+                $tags = array_merge($tags, $row['tags']);
+            }
+        }
+
+        return array_unique($tags);
     }
 }

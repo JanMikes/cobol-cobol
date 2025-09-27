@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}COBOLCOBOL{% endblock %}</title>
+        <meta name="description" content="{% block meta_description %}Premium SaaS content platform with subscription-based access{% endblock %}">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+        {% block stylesheets %}
+        <style>
+            .navbar-brand {
+                font-weight: 600;
+                font-size: 1.5rem;
+            }
+            .hero-section {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 100px 0;
+            }
+            .premium-badge {
+                background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+                color: white;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+            .card-premium {
+                border-left: 4px solid #f5576c;
+            }
+            .pricing-card {
+                transition: transform 0.2s;
+            }
+            .pricing-card:hover {
+                transform: translateY(-5px);
+            }
+            .pricing-card.featured {
+                border: 2px solid #007bff;
+                transform: scale(1.05);
+            }
+        </style>
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('app_home') }}">
+                    <i class="bi bi-layers"></i> COBOLCOBOL
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_articles') }}">Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_pricing') }}">Pricing</a>
+                        </li>
+                        {% if is_granted('ROLE_SUBSCRIBER') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_premium') }}">
+                                <i class="bi bi-star-fill text-warning"></i> Premium
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        {% if app.user %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle"></i> {{ app.user.firstName }}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ path('app_dashboard') }}">
+                                        <i class="bi bi-speedometer2"></i> Dashboard
+                                    </a></li>
+                                    {% if app.user.stripeCustomerId %}
+                                    <li><a class="dropdown-item" href="{{ path('app_manage_subscription') }}">
+                                        <i class="bi bi-credit-card"></i> Manage Subscription
+                                    </a></li>
+                                    {% endif %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary btn-sm ms-2" href="{{ path('app_register') }}">Sign Up</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Flash Messages -->
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- Main Content -->
+        <main>
+            {% block body %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-light py-4 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="bi bi-layers"></i> COBOLCOBOL</h5>
+                        <p class="text-muted">Premium SaaS content platform with subscription-based access.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Quick Links</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="{{ path('app_pricing') }}" class="text-light text-decoration-none">Pricing</a></li>
+                            <li><a href="{{ path('app_articles') }}" class="text-light text-decoration-none">Articles</a></li>
+                            {% if not app.user %}
+                            <li><a href="{{ path('app_register') }}" class="text-light text-decoration-none">Sign Up</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <hr class="my-4">
+                <div class="text-center text-muted">
+                    <small>&copy; {{ 'now'|date('Y') }} COBOLCOBOL. Built with Symfony & Stripe.</small>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        {% block extra_javascripts %}{% endblock %}
+    </body>
+</html>

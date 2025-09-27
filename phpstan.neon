@@ -1,0 +1,20 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - src/Kernel.php
+    symfony:
+        container_xml_path: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
+    doctrine:
+        objectManagerLoader: tests/doctrine-object-manager.php
+    ignoreErrors:
+        # Ignore errors from generated entity getters/setters
+        - '#Call to an undefined method App\\Entity\\[a-zA-Z]+::[gs]et#'
+        # Ignore Stripe SDK return types that might be mixed
+        - '#Parameter \#1 \$[a-zA-Z]+ of method Stripe\\[a-zA-Z\\\\]+::[a-zA-Z]+ expects [^,]+, mixed given#'
+        # Ignore form component mixed returns
+        - '#Cannot call method [a-zA-Z]+ on Symfony\\Component\\Form\\FormInterface\|null#'
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

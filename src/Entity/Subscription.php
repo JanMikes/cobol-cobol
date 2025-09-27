@@ -8,6 +8,20 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
 class Subscription
 {
+    public const STATUS_INCOMPLETE = 'incomplete';
+    public const STATUS_INCOMPLETE_EXPIRED = 'incomplete_expired';
+    public const STATUS_TRIALING = 'trialing';
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_PAST_DUE = 'past_due';
+    public const STATUS_CANCELED = 'canceled';
+    public const STATUS_UNPAID = 'unpaid';
+    public const STATUS_PAUSED = 'paused';
+
+    public const ACTIVE_STATUSES = [
+        self::STATUS_TRIALING,
+        self::STATUS_ACTIVE,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,33 +35,40 @@ class Subscription
     #[ORM\JoinColumn(nullable: false)]
     private ?Plan $plan = null;
 
-    #[ORM\Column(length: 255, unique: true)]
-    private ?string $stripeCustomerId = null;
-
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     private ?string $stripeSubscriptionId = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $currentPeriodStart = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $currentPeriodEnd = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $trialStart = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $trialEnd = null;
+
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $canceledAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $trialEnd = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $cancelAtPeriodEnd = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -63,6 +84,7 @@ class Subscription
     public function setUser(?User $user): static
     {
         $this->user = $user;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -75,18 +97,7 @@ class Subscription
     public function setPlan(?Plan $plan): static
     {
         $this->plan = $plan;
-
-        return $this;
-    }
-
-    public function getStripeCustomerId(): ?string
-    {
-        return $this->stripeCustomerId;
-    }
-
-    public function setStripeCustomerId(string $stripeCustomerId): static
-    {
-        $this->stripeCustomerId = $stripeCustomerId;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -99,6 +110,7 @@ class Subscription
     public function setStripeSubscriptionId(string $stripeSubscriptionId): static
     {
         $this->stripeSubscriptionId = $stripeSubscriptionId;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -111,8 +123,29 @@ class Subscription
     public function setStatus(string $status): static
     {
         $this->status = $status;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return in_array($this->status, self::ACTIVE_STATUSES, true);
+    }
+
+    public function isCanceled(): bool
+    {
+        return $this->status === self::STATUS_CANCELED;
+    }
+
+    public function isPastDue(): bool
+    {
+        return $this->status === self::STATUS_PAST_DUE;
+    }
+
+    public function isTrialing(): bool
+    {
+        return $this->status === self::STATUS_TRIALING;
     }
 
     public function getCurrentPeriodStart(): ?\DateTimeImmutable
@@ -120,9 +153,10 @@ class Subscription
         return $this->currentPeriodStart;
     }
 
-    public function setCurrentPeriodStart(\DateTimeImmutable $currentPeriodStart): static
+    public function setCurrentPeriodStart(?\DateTimeImmutable $currentPeriodStart): static
     {
         $this->currentPeriodStart = $currentPeriodStart;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -132,33 +166,23 @@ class Subscription
         return $this->currentPeriodEnd;
     }
 
-    public function setCurrentPeriodEnd(\DateTimeImmutable $currentPeriodEnd): static
+    public function setCurrentPeriodEnd(?\DateTimeImmutable $currentPeriodEnd): static
     {
         $this->currentPeriodEnd = $currentPeriodEnd;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getTrialStart(): ?\DateTimeImmutable
     {
-        return $this->createdAt;
+        return $this->trialStart;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setTrialStart(?\DateTimeImmutable $trialStart): static
     {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCanceledAt(): ?\DateTimeImmutable
-    {
-        return $this->canceledAt;
-    }
-
-    public function setCanceledAt(?\DateTimeImmutable $canceledAt): static
-    {
-        $this->canceledAt = $canceledAt;
+        $this->trialStart = $trialStart;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -171,29 +195,71 @@ class Subscription
     public function setTrialEnd(?\DateTimeImmutable $trialEnd): static
     {
         $this->trialEnd = $trialEnd;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function isActive(): bool
+    public function getCanceledAt(): ?\DateTimeImmutable
     {
-        return in_array($this->status, ['active', 'trialing']);
+        return $this->canceledAt;
     }
 
-    public function isCanceled(): bool
+    public function setCanceledAt(?\DateTimeImmutable $canceledAt): static
     {
-        return $this->status === 'canceled';
+        $this->canceledAt = $canceledAt;
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
     }
 
-    public function isPastDue(): bool
+    public function getCancelAtPeriodEnd(): ?\DateTimeImmutable
     {
-        return $this->status === 'past_due';
+        return $this->cancelAtPeriodEnd;
     }
 
-    public function isOnTrial(): bool
+    public function setCancelAtPeriodEnd(?\DateTimeImmutable $cancelAtPeriodEnd): static
     {
-        return $this->status === 'trialing' &&
-               $this->trialEnd !== null &&
-               $this->trialEnd > new \DateTimeImmutable();
+        $this->cancelAtPeriodEnd = $cancelAtPeriodEnd;
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function getStatusLabel(): string
+    {
+        return match ($this->status) {
+            self::STATUS_INCOMPLETE => 'Incomplete',
+            self::STATUS_INCOMPLETE_EXPIRED => 'Incomplete (Expired)',
+            self::STATUS_TRIALING => 'Trial',
+            self::STATUS_ACTIVE => 'Active',
+            self::STATUS_PAST_DUE => 'Past Due',
+            self::STATUS_CANCELED => 'Canceled',
+            self::STATUS_UNPAID => 'Unpaid',
+            self::STATUS_PAUSED => 'Paused',
+            default => 'Unknown',
+        };
+    }
+
+    public function getDaysUntilPeriodEnd(): ?int
+    {
+        if ($this->currentPeriodEnd === null) {
+            return null;
+        }
+
+        $now = new \DateTimeImmutable();
+        $interval = $now->diff($this->currentPeriodEnd);
+
+        return $interval->invert === 0 ? $interval->days : 0;
     }
 }

@@ -17,40 +17,47 @@ class Article
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 500, nullable: true)]
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $excerpt = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
     #[ORM\Column]
-    private ?bool $isPremium = null;
+    private bool $isPremium = false;
 
     #[ORM\Column]
-    private ?bool $isPublished = null;
+    private bool $isPublished = false;
 
-    #[ORM\Column(length: 255)]
-    private ?string $slug = null;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\Column]
+    private \DateTimeImmutable $createdAt;
+
+    #[ORM\Column]
+    private \DateTimeImmutable $updatedAt;
+
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
+
+    #[ORM\Column(type: 'json')]
+    private array $tags = [];
+
+    #[ORM\Column(nullable: true)]
+    private ?string $metaDescription = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $featuredImage = null;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
-        $this->isPublished = false;
-        $this->isPremium = false;
     }
 
     public function getId(): ?int
@@ -66,11 +73,20 @@ class Article
     public function setTitle(string $title): static
     {
         $this->title = $title;
+        $this->updatedAt = new \DateTimeImmutable();
 
-        // Auto-generate slug from title if not set
-        if (!$this->slug) {
-            $this->setSlug($this->generateSlug($title));
-        }
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -83,6 +99,7 @@ class Article
     public function setExcerpt(?string $excerpt): static
     {
         $this->excerpt = $excerpt;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -100,66 +117,32 @@ class Article
         return $this;
     }
 
-    public function isPremium(): ?bool
+    public function isPremium(): bool
     {
         return $this->isPremium;
     }
 
-    public function setIsPremium(bool $isPremium): static
+    public function setPremium(bool $isPremium): static
     {
         $this->isPremium = $isPremium;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function isPublished(): ?bool
+    public function isPublished(): bool
     {
         return $this->isPublished;
     }
 
-    public function setIsPublished(bool $isPublished): static
+    public function setPublished(bool $isPublished): static
     {
         $this->isPublished = $isPublished;
+        $this->updatedAt = new \DateTimeImmutable();
 
-        if ($isPublished && !$this->publishedAt) {
+        if ($isPublished && $this->publishedAt === null) {
             $this->publishedAt = new \DateTimeImmutable();
         }
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): static
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -172,8 +155,19 @@ class Article
     public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): \DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 
     public function getAuthor(): ?User
@@ -184,27 +178,67 @@ class Article
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function getPreview(int $length = 200): string
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    public function setTags(array $tags): static
+    {
+        $this->tags = $tags;
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getMetaDescription(): ?string
+    {
+        return $this->metaDescription;
+    }
+
+    public function setMetaDescription(?string $metaDescription): static
+    {
+        $this->metaDescription = $metaDescription;
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getFeaturedImage(): ?string
+    {
+        return $this->featuredImage;
+    }
+
+    public function setFeaturedImage(?string $featuredImage): static
+    {
+        $this->featuredImage = $featuredImage;
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getReadingTime(): int
+    {
+        $wordCount = str_word_count(strip_tags($this->content ?? ''));
+        return max(1, (int) ceil($wordCount / 200));
+    }
+
+    public function getPreview(int $length = 150): string
     {
         if ($this->excerpt) {
             return $this->excerpt;
         }
 
-        $preview = strip_tags($this->content);
-        if (strlen($preview) > $length) {
-            $preview = substr($preview, 0, $length) . '...';
+        $text = strip_tags($this->content ?? '');
+        if (strlen($text) <= $length) {
+            return $text;
         }
 
-        return $preview;
-    }
-
-    private function generateSlug(string $title): string
-    {
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
-        return trim($slug, '-');
+        return substr($text, 0, $length) . '...';
     }
 }

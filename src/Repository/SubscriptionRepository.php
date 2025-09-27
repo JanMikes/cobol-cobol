@@ -17,31 +17,18 @@ class SubscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Subscription::class);
     }
 
-    public function findOneByStripeSubscriptionId(string $stripeSubscriptionId): ?Subscription
+    public function findByStripeSubscriptionId(string $stripeSubscriptionId): ?Subscription
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.stripeSubscriptionId = :stripeSubscriptionId')
-            ->setParameter('stripeSubscriptionId', $stripeSubscriptionId)
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $this->findOneBy(['stripeSubscriptionId' => $stripeSubscriptionId]);
     }
 
-    public function findOneByStripeCustomerId(string $stripeCustomerId): ?Subscription
+    public function findActiveSubscriptionForUser(User $user): ?Subscription
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.stripeCustomerId = :stripeCustomerId')
-            ->setParameter('stripeCustomerId', $stripeCustomerId)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-    public function findActiveByUser(User $user): ?Subscription
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.user = :user')
-            ->andWhere('s.status IN (:statuses)')
+            ->where('s.user = :user')
+            ->andWhere('s.status IN (:activeStatuses)')
             ->setParameter('user', $user)
-            ->setParameter('statuses', ['active', 'trialing'])
+            ->setParameter('activeStatuses', Subscription::ACTIVE_STATUSES)
             ->orderBy('s.createdAt', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
@@ -54,8 +41,8 @@ class SubscriptionRepository extends ServiceEntityRepository
     public function findActiveSubscriptions(): array
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.status IN (:statuses)')
-            ->setParameter('statuses', ['active', 'trialing'])
+            ->where('s.status IN (:activeStatuses)')
+            ->setParameter('activeStatuses', Subscription::ACTIVE_STATUSES)
             ->orderBy('s.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
@@ -64,15 +51,51 @@ class SubscriptionRepository extends ServiceEntityRepository
     /**
      * @return Subscription[]
      */
-    public function findExpiredSubscriptions(): array
+    public function findExpiringSoon(int $days = 7): array
     {
-        $now = new \DateTimeImmutable();
+        $expiryDate = new \DateTimeImmutable(sprintf('+%d days', $days));
 
         return $this->createQueryBuilder('s')
-            ->andWhere('s.currentPeriodEnd < :now')
-            ->andWhere('s.status = :status')
-            ->setParameter('now', $now)
-            ->setParameter('status', 'active')
+            ->where('s.status IN (:activeStatuses)')
+            ->andWhere('s.currentPeriodEnd <= :expiryDate')
+            ->setParameter('activeStatuses', Subscription::ACTIVE_STATUSES)
+            ->setParameter('expiryDate', $expiryDate)
+            ->orderBy('s.currentPeriodEnd', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Subscription[]
+     */
+    public function findByUser(User $user): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('s.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countActiveSubscriptions(): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->where('s.status IN (:activeStatuses)')
+            ->setParameter('activeStatuses', Subscription::ACTIVE_STATUSES)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return Subscription[]
+     */
+    public function findRecentSubscriptions(int $limit = 10): array
+    {
+        return $this->createQueryBuilder('s')
+            ->orderBy('s.createdAt', 'DESC')
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
