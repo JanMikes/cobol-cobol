@@ -28,7 +28,7 @@
                                         <i class="bi bi-check-circle"></i> Active Subscriber
                                     </span>
                                     <p class="mt-2 mb-0">
-                                        <strong>Plan:</strong> {{ active_subscription.planName }}<br>
+                                        <strong>Plan:</strong> {{ active_subscription.plan.name }}<br>
                                         <strong>Status:</strong> {{ active_subscription.status|title }}<br>
                                         {% if active_subscription.currentPeriodEnd %}
                                         <strong>Next billing:</strong> {{ active_subscription.currentPeriodEnd|date('F j, Y') }}
@@ -91,7 +91,7 @@
                         {% if active_subscription %}
                         <div class="timeline-item">
                             <i class="bi bi-credit-card text-primary"></i>
-                            <span>Subscribed to {{ active_subscription.planName }} plan</span>
+                            <span>Subscribed to {{ active_subscription.plan.name }} plan</span>
                         </div>
                         {% endif %}
                     </div>
@@ -109,7 +109,7 @@
                     {% if active_subscription %}
                         <div class="text-center mb-3">
                             <div class="premium-badge d-inline-block">
-                                <i class="bi bi-star-fill"></i> {{ active_subscription.planName }}
+                                <i class="bi bi-star-fill"></i> {{ active_subscription.plan.name }}
                             </div>
                         </div>
 

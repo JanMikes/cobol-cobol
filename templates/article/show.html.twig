@@ -42,9 +42,6 @@
                                 </p>
                             </div>
                             <div class="col-md-6 text-md-end">
-                                {% if article.category %}
-                                <span class="badge bg-secondary">{{ article.category }}</span>
-                                {% endif %}
                                 {% if article.tags %}
                                     {% for tag in article.tags %}
                                     <span class="badge bg-light text-dark">{{ tag }}</span>
