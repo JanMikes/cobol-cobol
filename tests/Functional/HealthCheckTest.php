@@ -12,9 +12,11 @@ class HealthCheckTest extends BaseTestCase
         $this->assertResponseStatusCodeSame(200);
 
         $response = $this->client->getResponse();
-        $this->assertJson($response->getContent());
+        $content = $response->getContent();
+        $this->assertIsString($content);
+        $this->assertJson($content);
 
-        $data = json_decode($response->getContent(), true);
+        $data = json_decode($content, true);
         $this->assertArrayHasKey('status', $data);
         $this->assertEquals('ok', $data['status']);
         $this->assertArrayHasKey('timestamp', $data);

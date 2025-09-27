@@ -146,7 +146,7 @@ class LoginTest extends BaseTestCase
 
         $form['email'] = 'user@cobolcobol.com';
         $form['password'] = 'user123';
-        $form['_remember_me'] = true;
+        $form['_remember_me'] = '1';
 
         $this->client->submit($form);
 
